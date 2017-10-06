@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+{% load static %}
+{% load staticfiles %}
+<html>
+<head>
+	<title>BASE</title>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Facuty Feedback Service</title>
+
+
+    <script src="https://use.fontawesome.com/d690016400.js"></script>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="{% static 'css/metisMenu.min.css' %}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/sb-admin-2.css' %}" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="{% static 'css/morris.css' %}" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+
+    </script>
+</head>
+<body>
+	  <div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'index' %}" >D.J.Sanghvi College of Engineering-Faculty Feedback(Home)</a>
+               
+
+            </div>
+       <!-- /.navbar-header -->
+       <!-- /.navbar-top-links -->
+
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+              <ul class="nav" id="side-menu"  style="list-style-type:none;">
+                  <li>
+                     <a href="{% url 'index'%}"><i class="fa fa-caret-down" aria-hidden="true"></i>
+Feedback Services<span></span></a>
+                       <ul class="nav nav-second-level">
+                        
+                     
+                        <li>
+                            <a href="javascript:;" data-toggle="collapse" data-target="#demo" ><i class="fa fa-bar-chart-o fa-fw" ></i>Analytics<span class="fa arrow"></span></a>
+                            <ul  id="demo" class="collapse">
+                                <li>
+                                    <a href="{% url 'flot' %}" class ><i class="fa fa-line-chart" aria-hidden="true"></i>Pie-Chart</a>
+                                </li>
+                                
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                      
+                         <li>
+                            <a href="{% url 'form' %}"><i class="fa fa-pencil"></i> Faculty Feedback Form</a>
+                        </li>
+                   </li>     
+              </ul>              
+
+                    </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            <!-- /.navbar-static-side -->
+        </nav>
+        {% block appOne %}
+
+        {% endblock %}
+      </div><!-- #wrapper -->
+
+    <!-- jQuery -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="{% static 'js/metisMenu.min.js' %}"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <script src="{% static 'js/raphael.min.js' %}"></script>
+    <script src="{% static 'js/morris.min.js' %}"></script>
+    <script src="{% static 'js/morris-data.js' %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'js/sb-admin-2.js' %}"></script>        
+
+    <!-- Flot Charts JavaScript -->
+    <script src="{% static 'js/excanvas.min.js' %}"></script>
+    <script src="{% static 'js/jquery.flot.js' %}"></script>
+    <script src="{% static 'js/jquery.flot.pie.js' %}"></script>
+    <script src="{% static 'js/jquery.flot.resize.js' %}"></script>
+    <script src="{% static 'js/jquery.flot.time.js' %}"></script>
+    <script src="{% static 'js/jquery.flot.tooltip.min.js' %}"></script>
+    <script src="{% static 'js/flot-data.js' %}"></script>
+
+
+</body>
+</html>

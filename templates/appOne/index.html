@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <title>Home</title>
+</head>
+{% extends 'appOne/base.html' %}
+  {% block appOne %}
+      {% load staticfiles %}
+       <div id="page-wrapper" style="background-color: skyblue;">
+            <div class="row">
+                <div class="col-lg-12 col-sm-6">
+                    <h1 class="page-header">Home</h1>
+                </div>
+                  <h3>This service is for the students of D.J.Sanghvi College of Engineering so that students can provide their feedback to our faculty members and based on which we can improve the Teaching-Learning process.</h3>
+                  <br>
+                  <img src="{% static 'images/college.jpg' %}" align="middle">
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+           
+        </div>
+        <!-- /#page-wrapper -->
+
+  {% endblock %}
