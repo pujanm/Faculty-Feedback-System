@@ -50,14 +50,14 @@ $(document).ready(function() {
 });
 
 //Flot Pie Chart
-             $(function() {
+        $(function() {
 
     var data = [{
         label: "Applied Mathematics-II",
         data: 4
     }, {
         label: "Applied Physics-II",
-        data: 4
+        data: 4   
     }, {
         label: "Applied Chemistry-II",
         data: 3
@@ -93,7 +93,6 @@ $(document).ready(function() {
     });
 
 });
-
 //Flot Multiple Axes Line Chart
 $(function() {
     var oilprices = [
