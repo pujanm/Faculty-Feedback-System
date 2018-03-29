@@ -16,9 +16,13 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from appOne import views
+
+
 urlpatterns = [
-	url(r'^$', views.index, name='index'),
+    url(r'^$', views.index, name='index'),
+    url(r'^analytics/$', views.analytics, name='analytics'),
     url(r'^admin/', admin.site.urls),
-    url(r'^analytics/', views.flot, name='flot'),
-    url(r'^form/', views.form, name='form'),
+    url(r'^signup/$', views.signup, name='signup'),
+    url(r'^login/$', views.logIn, name='login'),
+    url(r'^logout/$', views.logOut, name='logout'),
 ]
