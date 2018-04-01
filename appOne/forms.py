@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, TeacherProfile
 
 
 class UserForm(forms.ModelForm):
@@ -19,3 +19,12 @@ class UserProfileForm(forms.ModelForm):
     class Meta():
         model = UserProfile
         fields = ('fname', 'lname', 'sap_id')
+
+
+class TeacherProfileForm(forms.ModelForm):
+    fname = forms.CharField(label='First Name')
+    lname = forms.CharField(label='Last Name')
+
+    class Meta():
+        model = TeacherProfile
+        fields = ('fname', 'lname')

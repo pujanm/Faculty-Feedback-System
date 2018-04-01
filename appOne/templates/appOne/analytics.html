@@ -75,7 +75,13 @@
 								<li>
                     <a href="{% url 'signup' %}">
                         <i class="ti-user"></i>
-                        <p>Signup/Login</p>
+                        <p>Student Signup/Login</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'teacher_signup' %}">
+                        <i class="ti-user"></i>
+                        <p>Teacher Signup/Login</p>
                     </a>
                 </li>
 								{% endif %}
@@ -260,7 +266,7 @@
 															<div class="chart-container">
 																<canvas id="myChart1"></canvas>
 															</div>
-															<h3>{{ f }}</h3>
+
                             </div>
                         </div>
                     </div>
@@ -377,10 +383,11 @@
 	<script>
 	var ctx = document.getElementById("myChart1").getContext('2d');
 	var f = {{ feedback }};
+	var s = {{ subject|safe }};
 	var chart =  new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: ["AM3", "AOA", "COA","CG", "OS", "OSL"],
+      labels: s,
       datasets: [{
         label: "Feedback",
         backgroundColor: ["rgba(153,255,51,0.4)",

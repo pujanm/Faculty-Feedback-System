@@ -13,10 +13,20 @@ class UserProfile(models.Model):
         return str(self.sap_id)
 
 
+class TeacherProfile(models.Model):
+    user = models.OneToOneField(User)
+    fname = models.CharField(max_length=50, blank=False)
+    lname = models.CharField(max_length=50, blank=False)
+
+    def __str__(self):
+        return str(self.fname) + " " + str(self.lname)
+
+
 class Feedback(models.Model):
     user = models.ForeignKey("auth.User")
     subject = models.CharField(max_length=250, default='AOA')
-    fac = models.CharField(max_length=250, default='')
+    fname = models.CharField(max_length=50, default='')
+    lname = models.CharField(max_length=50, default='')
     res1 = models.IntegerField(default=1)
     res2 = models.IntegerField(default=1)
     res3 = models.IntegerField(default=1)

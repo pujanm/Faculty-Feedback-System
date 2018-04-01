@@ -75,7 +75,13 @@
 								<li>
                     <a href="{% url 'signup' %}">
                         <i class="ti-user"></i>
-                        <p>Signup/Login</p>
+                        <p>Student Signup/Login</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'teacher_signup' %}">
+                        <i class="ti-user"></i>
+                        <p>Teacher Signup/Login</p>
                     </a>
                 </li>
 								{% endif %}
@@ -212,8 +218,12 @@
 												</select>
 											</div>
 											<div class="form-group">
-												<label for="text">Faculty Name:</label>
-												<input type="text" class="form-control" id="stock" name="fac_name" placeholder="Prof. ABC XYZ">
+												<label for="text">Faculty First Name:</label>
+												<input type="text" class="form-control" id="stock" name="fname" placeholder="Prof. ABC XYZ">
+											</div>
+											<div class="form-group">
+												<label for="text">Faculty Last Name:</label>
+												<input type="text" class="form-control" id="stock" name="lname" placeholder="Prof. ABC XYZ">
 											</div>
 											<div class="form-group">
 												<label for="text">Abilities to understand student's difficulties and willingness to help them :</label>

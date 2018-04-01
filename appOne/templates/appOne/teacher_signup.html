@@ -61,19 +61,18 @@
             </div>
 
             <ul class="nav">
-
-							<li  class="active">
-									<a href="{% url 'signup' %}">
-											<i class="ti-user"></i>
-											<p>Student Signup/Login</p>
-									</a>
-							</li>
-							<li>
-									<a href="{% url 'teacher_signup' %}">
-											<i class="ti-user"></i>
-											<p>Teacher Signup/Login</p>
-									</a>
-							</li>
+								<li>
+                    <a href="{% url 'signup' %}">
+                        <i class="ti-user"></i>
+                        <p>Student Signup/Login</p>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="{% url 'teacher_signup' %}">
+                        <i class="ti-user"></i>
+                        <p>Teacher Signup/Login</p>
+                    </a>
+                </li>
 
                 <!-- <li>
                     <a href="table.html">
@@ -125,7 +124,7 @@
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="{% url 'login' %}">Login</a>
+                    <a class="navbar-brand" href="{% url 'signup' %}">Teacher Sign Up</a>
                 </div>
                 <!-- <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -248,21 +247,18 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">
-                                <h3 style="width:50%; margin:0 auto;" class="title">Login</h3>
+                                <h3 style="width:50%; margin:0 auto;" class="title">
+																	Teacher Sign Up / <a href="{% url 'teacher_login' %}">Login</a></p>
+																</h3>
 
                             </div>
 
                             <div class="content">
-															<h5 style="width: 50%; margin: 0 auto;color: red;">{{ i }}</h5><br>
 														 <form method="post" class="form-group" id="signup">
 															 {% csrf_token %}
-															 <label for="username">Username :</label>
-															 <input type="text" name="username" placeholder="Enter username"><br><br>
-															 <label for="password">Password :</label>
-															 <input type="password" name="password" placeholder="Enter your password"><br><br>
-															 <label for="sapid">SAP ID :</label>
-															 <input type="text" name="sapid" placeholder="Enter your SAP ID"><br><br>
-															 <button type="submit" class="btn btn-default">Login</button>
+                               {{ teacher_form.as_p|linebreaks }}
+															 {{ user_form.as_p|linebreaks }}
+															 <button type="submit" class="btn btn-default">Sign up</button>
 														 </form>
                             </div>
                         </div>

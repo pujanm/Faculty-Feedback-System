@@ -34,15 +34,6 @@
 		<!-- Charts -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 </head>
-<style>
-	label {
-		display: block;
-	}
-	#signup {
-		width: 50%;
-		margin: 0 auto;
-	}
-</style>
 <body>
 
 <div class="wrapper">
@@ -55,26 +46,39 @@
 
     	<div class="sidebar-wrapper">
             <div class="logo">
-                <a href="{% url 'index' %}" class="simple-text">
+                <a href="{% url 'teacher_analytics' %}" class="simple-text">
 									Faculty Feedback System
                 </a>
             </div>
 
             <ul class="nav">
-
-							<li  class="active">
-									<a href="{% url 'signup' %}">
-											<i class="ti-user"></i>
-											<p>Student Signup/Login</p>
-									</a>
-							</li>
-							<li>
-									<a href="{% url 'teacher_signup' %}">
-											<i class="ti-user"></i>
-											<p>Teacher Signup/Login</p>
-									</a>
-							</li>
-
+							{% if user.is_authenticated %}
+								<li class="active">
+                    <a href="{% url 'teacher_analytics' %}">
+                        <i class="ti-pie-chart"></i>
+                        <p>Analytics</p>
+                    </a>
+                </li>
+								<li>
+                    <a href="{% url 'logout' %}">
+                        <i class="ti-unlock"></i>
+                        <p>Logout</p>
+                    </a>
+                </li>
+								{% else %}
+								<li>
+                    <a href="{% url 'signup' %}">
+                        <i class="ti-user"></i>
+                        <p>Student Signup/Login</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'teacher_signup' %}">
+                        <i class="ti-user"></i>
+                        <p>Teacher Signup/Login</p>
+                    </a>
+                </li>
+								{% endif %}
                 <!-- <li>
                     <a href="table.html">
                         <i class="ti-view-list-alt"></i>
@@ -125,7 +129,7 @@
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="{% url 'login' %}">Login</a>
+                    <a class="navbar-brand" href="{% url 'analytics' %}">Your Overall Performance</a>
                 </div>
                 <!-- <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -243,32 +247,24 @@
                         </div>
                     </div> -->
                 </div>
-								<div class="row">
+                <div class="row">
 
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">
-                                <h3 style="width:50%; margin:0 auto;" class="title">Login</h3>
-
+                                <h3 class="title">Feedback Summary</h3>
+                                <h4 class="title">Prof. {{ fname }} {{ lname }}</h4>
                             </div>
 
                             <div class="content">
-															<h5 style="width: 50%; margin: 0 auto;color: red;">{{ i }}</h5><br>
-														 <form method="post" class="form-group" id="signup">
-															 {% csrf_token %}
-															 <label for="username">Username :</label>
-															 <input type="text" name="username" placeholder="Enter username"><br><br>
-															 <label for="password">Password :</label>
-															 <input type="password" name="password" placeholder="Enter your password"><br><br>
-															 <label for="sapid">SAP ID :</label>
-															 <input type="text" name="sapid" placeholder="Enter your SAP ID"><br><br>
-															 <button type="submit" class="btn btn-default">Login</button>
-														 </form>
+															<div class="chart-container">
+																<canvas id="myChart1"></canvas>
+															</div>
+
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- <div class="row">
                     <div class="col-md-6">
                         <div class="card">
@@ -381,10 +377,11 @@
 	<script>
 	var ctx = document.getElementById("myChart1").getContext('2d');
 	var f = {{ feedback }};
+  var s = {{ subject|safe }};
 	var chart =  new Chart(ctx, {
     type: 'pie',
     data: {
-      labels: ["AM3", "AOA", "COA","CG", "OS", "OSL"],
+      labels: s,
       datasets: [{
         label: "Feedback",
         backgroundColor: ["rgba(153,255,51,0.4)",
