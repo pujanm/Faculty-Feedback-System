@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 
 def index(request):
-    if TeacherProfile.objects.all().filter(user=request.user).count == 0:
+    if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
         if request.user.is_authenticated():
             username = request.user
             u = UserProfile.objects.all().filter(user=username)
