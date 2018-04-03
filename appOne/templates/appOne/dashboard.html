@@ -33,6 +33,11 @@
     <link href="../../static/css/themify-icons.css" rel="stylesheet">
 		<!-- Charts -->
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+		<style media="screen">
+		label {
+			display: block;
+		}
+		</style>
 </head>
 <body>
 {% if user.is_authenticated %}
@@ -218,12 +223,7 @@
 												</select>
 											</div>
 											<div class="form-group">
-												<label for="text">Faculty First Name:</label>
-												<input type="text" class="form-control" id="stock" name="fname" placeholder="Prof. ABC XYZ">
-											</div>
-											<div class="form-group">
-												<label for="text">Faculty Last Name:</label>
-												<input type="text" class="form-control" id="stock" name="lname" placeholder="Prof. ABC XYZ">
+												{{ teacher_list.form.as_p|linebreaks }}
 											</div>
 											<div class="form-group">
 												<label for="text">Abilities to understand student's difficulties and willingness to help them :</label>

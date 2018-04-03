@@ -1,19 +1,23 @@
 from django.shortcuts import render, redirect
 from .models import Feedback, UserProfile, TeacherProfile
 from .forms import UserForm, UserProfileForm, TeacherProfileForm
+from .filters import TeacherProfileFilter
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
 def index(request):
-    if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
-        if request.user.is_authenticated():
+    if request.user.is_authenticated():
+        if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
+
             username = request.user
             u = UserProfile.objects.all().filter(user=username)
             fname = u[0].fname
             lname = u[0].lname
             sapid = u[0].sap_id
+            teacher_list = TeacherProfile.objects.all()
+            teacher_filtered = TeacherProfileFilter(request.GET, queryset=teacher_list)
             if request.POST:
                 s = request.POST.get('subject')
                 fname = request.POST.get('fname')
@@ -50,13 +54,14 @@ def index(request):
             context = {
                 'fname': fname,
                 'lname': lname,
-                'sapid': sapid
+                'sapid': sapid,
+                'teacher_list': teacher_filtered
             }
             return render(request, 'appOne/dashboard.html', context)
         else:
-            return redirect('signup')
+            return redirect('teacher_analytics')
     else:
-        return redirect('teacher_analytics')
+        return redirect('signup')
 
 
 if Feedback.objects.all().count() != 0:
