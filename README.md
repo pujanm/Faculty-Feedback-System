@@ -1,4 +1,4 @@
-# Faculty Feedback System
+# Faculty - Feedback System
 It is a feedback system where students give their review on their respective faculties over a semester.These reviews are retrieved and certain calcultions are performed and a pie-chart is plotted.This pie-chart helps the higher authorities to analyze the faculty performance which will in turn helps them to smoothen the teaching learning process.
 Here student can only review analytics of the feedbacks that he has given.
 And the teacher/faculty can review his/her performance.
