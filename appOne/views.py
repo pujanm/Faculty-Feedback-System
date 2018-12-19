@@ -64,8 +64,9 @@ def index(request):
         return redirect('signup')
 
 
-if Feedback.objects.all().count() != 0:
-    def analytics(request):
+
+def analytics(request):
+    if Feedback.objects.all().count() != 0:
         if request.user.is_authenticated():
             final = []
             subject = []
@@ -182,15 +183,15 @@ if Feedback.objects.all().count() != 0:
             return render(request, 'appOne/analytics.html', context)
         else:
             return redirect('signup')
-else:
-    def analytics(request):
+    else:
         if request.user.is_authenticated():
             return render(request, 'appOne/analytics.html', {'f': 'No Feedbacks Yet!!'})
         else:
             return redirect('signup')
 
-if Feedback.objects.all().count() != 0:
-    def teacher_analytics(request):
+
+def teacher_analytics(request):
+    if Feedback.objects.all().count() != 0:
         if request.user.is_authenticated():
             username = request.user
             u = TeacherProfile.objects.all().filter(user=username)
@@ -314,8 +315,7 @@ if Feedback.objects.all().count() != 0:
             return render(request, 'appOne/teacher_analytics.html', context)
         else:
             return redirect('signup')
-else:
-    def teacher_analytics(request):
+    else:
         if request.user.is_authenticated():
             return render(request, 'appOne/teacher_analytics.html', {'f': 'No Feedbacks Yet!!'})
         else:
