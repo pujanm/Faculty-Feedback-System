@@ -7,10 +7,9 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User)
     fname = models.CharField(max_length=50, blank=True)
     lname = models.CharField(max_length=50, blank=True)
-    sap_id = models.BigIntegerField(blank=False, unique=True)
 
     def __str__(self):
-        return str(self.sap_id)
+        return str(self.user.username)
 
 
 class TeacherProfile(models.Model):
@@ -22,9 +21,16 @@ class TeacherProfile(models.Model):
         return str(self.fname) + " " + str(self.lname)
 
 
+class Subject(models.Model):
+    name = models.CharField(max_length=250, blank=False)
+    teacher = models.ManyToManyField(TeacherProfile)
+
+    def __str__(self):
+        return str(self.name)
+
 class Feedback(models.Model):
     user = models.ForeignKey("auth.User")
-    subject = models.CharField(max_length=250, default='AOA')
+    subject = models.OneToOneField(Subject, on_delete=models.CASCADE)
     fname = models.CharField(max_length=50, default='')
     lname = models.CharField(max_length=50, default='')
     res1 = models.IntegerField(default=1)
