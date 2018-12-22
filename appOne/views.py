@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Feedback, UserProfile, TeacherProfile
+from .models import Feedback, UserProfile, TeacherProfile, Subject
 from .forms import UserForm, UserProfileForm, TeacherProfileForm
 from .filters import TeacherProfileFilter
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 # Create your views here.
 
 
@@ -12,16 +13,18 @@ def index(request):
         if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
 
             username = request.user
-            u = UserProfile.objects.all().filter(user=username)
+            u = UserProfile.objects.filter(user=username)
             fname = u[0].fname
             lname = u[0].lname
-            sapid = u[0].sap_id
+            subject_list = [i.name for i in u[0].subject.all()]
             teacher_list = TeacherProfile.objects.all()
-            teacher_filtered = TeacherProfileFilter(request.GET, queryset=teacher_list)
+            # teacher_filtered = TeacherProfileFilter(request.GET, queryset=teacher_list)
             if request.POST:
+                u = u[0]
                 s = request.POST.get('subject')
-                fname = request.POST.get('fname')
-                lname = request.POST.get('lname')
+                # fname = request.POST.get('fname')
+                # lname = request.POST.get('lname')
+                t = request.POST.get('teacher')
                 f1 = request.POST.get('f1')
                 f2 = request.POST.get('f2')
                 f3 = request.POST.get('f3')
@@ -32,11 +35,14 @@ def index(request):
                 f8 = request.POST.get('f8')
                 f9 = request.POST.get('f9')
                 sug = request.POST.get('sug')
+                tea = TeacherProfile.objects.filter(fname=t.split(" ")[0])
+                print(tea)
+                sub = Subject.objects.filter(name=s)
+                print(sub)
                 f = Feedback.objects.create(
-                    user=request.user,
-                    subject=s,
-                    fname=fname,
-                    lname=lname,
+                    student=u,
+                    subject=sub[0],
+                    teacher=tea[0],
                     res1=f1,
                     res2=f2,
                     res3=f3,
@@ -54,8 +60,8 @@ def index(request):
             context = {
                 'fname': fname,
                 'lname': lname,
-                'sapid': sapid,
-                'teacher_list': teacher_filtered
+                'teacher_list': teacher_list,
+                'subject_list': subject_list
             }
             return render(request, 'appOne/dashboard.html', context)
         else:
@@ -65,7 +71,7 @@ def index(request):
 
 
 
-def analytics(request, subjects):
+def analytics(request):
     #To be integrated with the frontend and to get the list of subjects dynamically for particular student
     #depending upon the semester.
 
@@ -73,25 +79,30 @@ def analytics(request, subjects):
         final = []
         subject_list = []
         if request.user.is_authenticated():
+            user = request.user
+            student = UserProfile.objects.filter(user=user)
+            subjects = [i.name for i in student[0].subject.all()]
             for subject in subjects:
-                if Feedback.objects.all().filter(subject=subject).count() != 0:
-                    sub = Feedback.objects.all().filter(subject=subject, user=request.user)
+                sub_obj = Subject.objects.filter(name=subject)
+                if Feedback.objects.filter(subject=sub_obj).count() != 0:
+                    student = UserProfile.objects.filter(user=request.user)
+                    sub = Feedback.objects.filter(subject=sub_obj, student=student)
                     avg_sub = []
-                    for i in range(0, len(am3)):
+                    for i in range(0, len(sub)):
                         sum = 0
                         sum = sub[i].res1 + sub[i].res2 + sub[i].res3 + sub[i].res4 + sub[i].res5 + sub[i].res6 + sub[i].res7 + sub[i].res8 + sub[i].res9
                         avg = sum / 9
                         avg_sub.append(avg)
                     sum_sub = 0
-                    for i in range(0, len(avg_am3)):
-                        sum_am3 += avg_am3[i]
-                    av_am3 = sum_am3 / len(avg_am3)
-                    print(av_am3)
-                    final.append(int((av_am3 / 5) * 100))
+                    for i in range(0, len(avg_sub)):
+                        sum_sub += avg_sub[i]
+                    avg_sub = sum_sub / len(avg_sub)
+                    print(avg_sub)
+                    final.append(int((avg_sub / 5) * 100))
                     subject_list.append(subject[0])
             context = {
                     'feedback': final,
-                    'subject': subject,
+                    'subject': subject_list,
                     'f': ''
                 }
             return render(request, 'appOne/analytics.html', context)
@@ -231,30 +242,33 @@ def teacher_analytics(request):
         final = []
         subject_list = []
         if request.user.is_authenticated():
-            username = request.user
-            u = TeacherProfile.objects.all().filter(user=username)
-            print(u[0].fname + " " + u[0].lname)
-            fname = u[0].fname
-            lname = u[0].lname
+            user = request.user;
+            teacher = TeacherProfile.objects.filter(user=user)
+            subjects = [i.name for i in teacher[0].subject.all()]
+            print(teacher[0].fname + " " + teacher[0].lname)
+            fname = teacher[0].fname
+            lname = teacher[0].lname
             for subject in subjects:
-                if Feedback.objects.all().filter(subject=subject).count() != 0:
-                    sub = Feedback.objects.all().filter(subject=subject, user=request.user)
+                sub_obj = Subject.objects.filter(name=subject)
+                if Feedback.objects.filter(subject=sub_obj).count() != 0:
+                    teacher = TeacherProfile.objects.filter(user=request.user)
+                    sub = Feedback.objects.filter(subject=sub_obj, teacher=teacher)
                     avg_sub = []
-                    for i in range(0, len(am3)):
+                    for i in range(0, len(sub)):
                         sum = 0
                         sum = sub[i].res1 + sub[i].res2 + sub[i].res3 + sub[i].res4 + sub[i].res5 + sub[i].res6 + sub[i].res7 + sub[i].res8 + sub[i].res9
                         avg = sum / 9
                         avg_sub.append(avg)
                     sum_sub = 0
-                    for i in range(0, len(avg_am3)):
-                        sum_am3 += avg_am3[i]
-                    av_am3 = sum_am3 / len(avg_am3)
-                    print(av_am3)
-                    final.append(int((av_am3 / 5) * 100))
+                    for i in range(0, len(avg_sub)):
+                        sum_sub += avg_sub[i]
+                    avg_sub = sum_sub / len(avg_sub)
+                    print(avg_sub)
+                    final.append(int((avg_sub / 5) * 100))
                     subject_list.append(subject[0])
             context = {
                     'feedback': final,
-                    'subject': subject,
+                    'subject': subject_list,
                     'fname': fname,
                     'lname': lname,
                     'f': ''
@@ -472,12 +486,11 @@ def logIn(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        sap_id = request.POST.get('sapid')
-        print(type(sap_id))
+        user = User.objects.filter(username=username)
         try:
-            u = UserProfile.objects.all().filter(sap_id=sap_id)
+            u = UserProfile.objects.all().filter(user=user)
         except:
-            u = UserProfile.objects.all().filter(sap_id=9)
+            print("User does not exist!")
         if(u.count() == 0):
             return render(request, 'appOne/login.html', {'i': 'Invalid Password/SAP ID'})
         user = authenticate(username=username, password=password)

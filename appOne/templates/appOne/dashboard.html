@@ -214,16 +214,18 @@
 											<div class="form-group">
 												<label for="text">Subject :</label>
 												<select class="form-control" name="subject" id="sub">
-													<option>Applied Mathematics - III</option>
-													<option>Analysis of Algorithms</option>
-													<option>Computer Organization and Architecture</option>
-													<option>Computer Graphics</option>
-													<option>Operating System</option>
-													<option>Open Source Tech Lab</option>
+                                                    {% for subject in subject_list %}
+													<option>{{ subject }}</option>
+                                                    {% endfor %}
 												</select>
 											</div>
 											<div class="form-group">
-												{{ teacher_list.form.as_p|linebreaks }}
+												<label for="text">Teacher :</label>
+                                                <select class="form-control" name="teacher" id="sub">
+                                                    {% for teacher in teacher_list %}
+                                                    <option>{{ teacher.fname }} {{ teacher.lname }}</option>
+                                                    {% endfor %}
+                                                </select>
 											</div>
 											<div class="form-group">
 												<label for="text">Abilities to understand student's difficulties and willingness to help them :</label>
