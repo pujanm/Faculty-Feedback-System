@@ -3,21 +3,21 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+class Subject(models.Model):
+    name = models.CharField(max_length=250, blank=False)
+
+    def __str__(self):
+        return str(self.name)
+
+
 class TeacherProfile(models.Model):
     user = models.OneToOneField(User)
     fname = models.CharField(max_length=50, blank=False)
     lname = models.CharField(max_length=50, blank=False)
+    subject = models.ManyToManyField(Subject)
 
     def __str__(self):
         return str(self.fname) + " " + str(self.lname)
-
-
-class Subject(models.Model):
-    name = models.CharField(max_length=250, blank=False)
-    teacher = models.ManyToManyField(TeacherProfile)
-
-    def __str__(self):
-        return str(self.name)
 
 
 class UserProfile(models.Model):
