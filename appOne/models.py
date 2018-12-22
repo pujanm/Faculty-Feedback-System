@@ -3,15 +3,6 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User)
-    fname = models.CharField(max_length=50, blank=True)
-    lname = models.CharField(max_length=50, blank=True)
-
-    def __str__(self):
-        return str(self.user.username)
-
-
 class TeacherProfile(models.Model):
     user = models.OneToOneField(User)
     fname = models.CharField(max_length=50, blank=False)
@@ -27,6 +18,17 @@ class Subject(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User)
+    fname = models.CharField(max_length=50, blank=True)
+    lname = models.CharField(max_length=50, blank=True)
+    subject = models.ManyToManyField(Subject)
+
+    def __str__(self):
+        return str(self.user.username)
+
 
 class Feedback(models.Model):
     user = models.ForeignKey("auth.User")
