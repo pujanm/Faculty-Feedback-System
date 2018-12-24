@@ -207,25 +207,24 @@
                             </div>
                         </div>
                     </div> -->
-										<h3>SAP ID: {{ sapid }}</h3>
+										<h3>SAP ID: {{ request.user }}</h3>
 										<br>
 										<form method="post">
 											{% csrf_token %}
 											<div class="form-group">
 												<label for="text">Subject :</label>
 												<select class="form-control" name="subject" id="sub">
-                                                    {% for subject in subject_list %}
-													<option>{{ subject }}</option>
-                                                    {% endfor %}
+														<option>Select a Subject</option>
+                            {% for subject in subject_list %}
+															<option>{{ subject }}</option>
+                            {% endfor %}
 												</select>
 											</div>
 											<div class="form-group">
 												<label for="text">Teacher :</label>
-                                                <select class="form-control" name="teacher" id="sub">
-                                                    {% for teacher in teacher_list %}
-                                                    <option>{{ teacher.fname }} {{ teacher.lname }}</option>
-                                                    {% endfor %}
-                                                </select>
+                        <select class="form-control" name="teacher" id="teacher">
+
+                        </select>
 											</div>
 											<div class="form-group">
 												<label for="text">Abilities to understand student's difficulties and willingness to help them :</label>
@@ -467,7 +466,7 @@
 </body>
 
     <!--   Core JS Files   -->
-    <script src="../../static/js/jquery-1.10.2.js" type="text/javascript"></script>
+  <script src="../../static/js/jquery-1.10.2.js" type="text/javascript"></script>
 	<script src="../../static/js/bootstrap.min.js" type="text/javascript"></script>
 
 	<!--  Checkbox, Radio & Switch Plugins -->
@@ -487,6 +486,31 @@
 
 	<!-- Paper Dashboard DEMO methods, don't include it in your project! -->
 	<script src="../../static/js/demo.js"></script>
-
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript">
+			$(document).ready( () => {
+				$("#sub").change( () => {
+					var subject = $("#sub").val();
+					$.ajax({
+						url: `/teacher_names/${subject}`,
+						type: 'GET',
+						datatype: 'json',
+						success: (res) => {
+							$("#teacher").empty();
+							var names = []
+							for(var i=0; i < res['teacher_names'].length; i++){
+								names.push(res['teacher_names'][i])
+							}
+							option_str = "";
+							for(var i=0; i < names.length; i++) {
+								option_str += `<option>${names[i]}</option>`;
+							}
+							console.log(option_str);
+							$("#teacher").append(option_str);
+						}
+					})
+				});
+			});
+	</script>
 
 </html>

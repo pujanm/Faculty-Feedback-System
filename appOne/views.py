@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from .models import Feedback, UserProfile, TeacherProfile, Subject
 from .forms import UserForm, UserProfileForm, TeacherProfileForm
 from .filters import TeacherProfileFilter
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+import json
 # Create your views here.
 
 
@@ -18,6 +19,7 @@ def index(request):
             lname = u[0].lname
             subject_list = [i.name for i in u[0].subject.all()]
             teacher_list = TeacherProfile.objects.all()
+            print(subject_list)
             # teacher_filtered = TeacherProfileFilter(request.GET, queryset=teacher_list)
             if request.POST:
                 u = u[0]
@@ -96,9 +98,10 @@ def analytics(request):
                     sum_sub = 0
                     for i in range(0, len(avg_sub)):
                         sum_sub += avg_sub[i]
-                    avg_sub = sum_sub / len(avg_sub)
                     print(avg_sub)
-                    final.append(int((avg_sub / 5) * 100))
+                    av_sub = sum_sub / len(avg_sub)
+                    print(av_sub)
+                    final.append(int((av_sub / 5) * 100))
                     subject_list.append(subject[0])
             context = {
                     'feedback': final,
@@ -231,7 +234,7 @@ def analytics(request):
         #     return render(request, 'appOne/analytics.html', context)
         # else:
         #     return redirect('signup')
-    
+
 
 
 def teacher_analytics(request):
@@ -262,9 +265,9 @@ def teacher_analytics(request):
                     sum_sub = 0
                     for i in range(0, len(avg_sub)):
                         sum_sub += avg_sub[i]
-                    avg_sub = sum_sub / len(avg_sub)
-                    print(avg_sub)
-                    final.append(int((avg_sub / 5) * 100))
+                    av_sub = sum_sub / len(avg_sub)
+                    print(av_sub)
+                    final.append(int((av_sub / 5) * 100))
                     subject_list.append(subject[0])
             context = {
                     'feedback': final,
@@ -414,6 +417,15 @@ def teacher_analytics(request):
     #         return render(request, 'appOne/teacher_analytics.html', {'f': 'No Feedbacks Yet!!'})
     #     else:
     #         return redirect('signup')
+def get_teacher_name(request, subject):
+    s = Subject.objects.filter(name=subject)
+    if s.count() != 0:
+        t = TeacherProfile.objects.filter(subject=Subject.objects.filter(name=subject)[0])
+        teacher_names = [i.fname + ' ' + i.lname for i in t]
+    else:
+        teacher_names = ['No Teacher Found']
+    print(teacher_names)
+    return HttpResponse(json.dumps({'teacher_names': teacher_names}), content_type="application/json")
 
 
 def teacherSignup(request):
