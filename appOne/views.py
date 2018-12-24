@@ -250,7 +250,7 @@ def teacher_analytics(request):
     #depending upon the semester.
 
     if Feedback.objects.all().count() != 0:
-        final = []
+        avg_sub = []
         subject_list = []
         if request.user.is_authenticated():
             user = request.user;
@@ -264,21 +264,22 @@ def teacher_analytics(request):
                 if Feedback.objects.filter(subject=sub_obj).count() != 0:
                     teacher = TeacherProfile.objects.filter(user=request.user)
                     sub = Feedback.objects.filter(subject=sub_obj, teacher=teacher)
-                    avg_sub = []
-                    for i in range(0, len(sub)):
-                        sum = 0
-                        sum = sub[i].res1 + sub[i].res2 + sub[i].res3 + sub[i].res4 + sub[i].res5 + sub[i].res6 + sub[i].res7 + sub[i].res8 + sub[i].res9
-                        avg = sum / 9
-                        avg_sub.append(avg)
-                    sum_sub = 0
-                    for i in range(0, len(avg_sub)):
-                        sum_sub += avg_sub[i]
-                    av_sub = sum_sub / len(avg_sub)
-                    print(av_sub)
-                    final.append(int((av_sub / 5) * 100))
-                    subject_list.append(subject[0])
+                    print(sub)
+                    sum = 0
+                    sum = sub[0].res1 / 5 + sub[0].res2 / 5  + sub[0].res3 / 5 + sub[0].res4 / 5 + sub[0].res5 / 5 + sub[0].res6 / 5 + sub[0].res7 / 5 + sub[0].res8 / 5 + sub[0].res9 / 5
+                    avg = sum / 9
+                    avg_sub.append(round(avg * 100))
+                    # sum_sub = 0
+                    # for i in range(0, len(avg_sub)):
+                    #     sum_sub += avg_sub[i]
+                    # print(avg_sub)
+                    # av_sub = sum_sub / len(avg_sub)
+                    # print(av_sub)
+                    # final.append(int((av_sub / 5) * 100))
+                    subject_list.append(subject)
+                    print(avg_sub)
             context = {
-                    'feedback': final,
+                    'feedback': avg_sub,
                     'subject': subject_list,
                     'fname': fname,
                     'lname': lname,

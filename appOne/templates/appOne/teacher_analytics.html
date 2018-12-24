@@ -379,7 +379,7 @@
 	var f = {{ feedback }};
   var s = {{ subject|safe }};
 	var chart =  new Chart(ctx, {
-    type: 'pie',
+    type: 'bar',
     data: {
       labels: s,
       datasets: [{
@@ -393,6 +393,16 @@
 				],
         data: f
       }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true,
+                    max:100
+                }
+            }]
+        }
     }
 });
 
