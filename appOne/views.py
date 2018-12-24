@@ -90,21 +90,23 @@ def analytics(request):
                     student = UserProfile.objects.filter(user=request.user)
                     sub = Feedback.objects.filter(subject=sub_obj, student=student)
                     avg_sub = []
+                    print(sub)
                     for i in range(0, len(sub)):
                         sum = 0
-                        sum = sub[i].res1 + sub[i].res2 + sub[i].res3 + sub[i].res4 + sub[i].res5 + sub[i].res6 + sub[i].res7 + sub[i].res8 + sub[i].res9
+                        sum = sub[i].res1 / 5 + sub[i].res2 / 5  + sub[i].res3 / 5 + sub[i].res4 / 5 + sub[i].res5 / 5 + sub[i].res6 / 5 + sub[i].res7 / 5 + sub[i].res8 / 5 + sub[i].res9 / 5
                         avg = sum / 9
-                        avg_sub.append(avg)
-                    sum_sub = 0
-                    for i in range(0, len(avg_sub)):
-                        sum_sub += avg_sub[i]
-                    print(avg_sub)
-                    av_sub = sum_sub / len(avg_sub)
-                    print(av_sub)
-                    final.append(int((av_sub / 5) * 100))
+                        avg_sub.append(avg * 100)
+                    # sum_sub = 0
+                    # for i in range(0, len(avg_sub)):
+                    #     sum_sub += avg_sub[i]
+                    # print(avg_sub)
+                    # av_sub = sum_sub / len(avg_sub)
+                    # print(av_sub)
+                    # final.append(int((av_sub / 5) * 100))
                     subject_list.append(subject[0])
+                    print(avg_sub)
             context = {
-                    'feedback': final,
+                    'feedback': avg_sub,
                     'subject': subject_list,
                     'f': ''
                 }
