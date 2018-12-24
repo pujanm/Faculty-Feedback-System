@@ -302,6 +302,32 @@ def get_teacher_name(request, subject):
     return HttpResponse(json.dumps({'teacher_names': teacher_names}), content_type="application/json")
 
 
+def teacher_detailed_analytics(request, subject):
+    subject = Subject.objects.filter(name=subject)
+    user = request.user
+    teacher = TeacherProfile.objects.filter(user=user)
+
+    feedback = Feedback.objects.filter(teacher=teacher, subject=subject)
+    arr = [0, 0, 0, 0, 0]
+    count_arr = ["One", "Two", "Three", "Four", "Five"]
+    for i in feedback:
+        sum = 0
+        sum = i.res1 + i.res2 + i.res3 + i.res4 + i.res5 + i.res6 + i.res7 + i.res8 + i.res9
+        avg = round(sum/9.0)
+        arr[avg - 1] += 1
+        # dicto[str(avg)] += 1
+
+    print(arr)
+    context = {
+        'subject_name': subject[0].name,
+        'fname': teacher[0].fname,
+        'lname': teacher[0].lname,
+        'arr': arr,
+        'count_arr': count_arr
+    }
+    return render(request, "appOne/teacher_detailed_analytics.html", context)
+
+
 def teacherSignup(request):
 
     if request.method == "POST":

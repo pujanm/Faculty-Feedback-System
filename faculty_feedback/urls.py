@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^teacher_signup/$', views.teacherSignup, name="teacher_signup"),
     url(r'^teacher_login/$', views.teacherLogin, name="teacher_login"),
     url(r'^teacher_names/(?P<subject>[\w ]+)/$', views.get_teacher_name, name="teacher_names"),
+    url(r'^teacher_detailed/(?P<subject>[\w ]+)/$', views.teacher_detailed_analytics, name="teacher_detailed_analytics"),
 
 ]

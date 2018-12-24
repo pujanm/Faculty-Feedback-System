@@ -252,7 +252,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="header">
-                                <h3 class="title">Feedback Summary</h3>
+                                <h3 class="title">{{subject_name}} Summary</h3>
                                 <h4 class="title">Prof. {{ fname }} {{ lname }}</h4>
                             </div>
 
@@ -261,27 +261,6 @@
 																<canvas id="myChart1"></canvas>
 															</div>
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row">
-
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="header">
-                                <h3 class="title">Detailed feedback</h3>
-                                <!-- <h4 class="title">Prof. {{ fname }} {{ lname }}</h4> -->
-                            </div>
-
-                            <div class="content">
-                                {% for sub in subject %}
-                                    <a href="/teacher_detailed/{{sub}}"><button class="btn btn-primary">{{ sub }}</button></a><br><br>
-
-                                {% endfor %}
-    
                             </div>
                         </div>
                     </div>
@@ -398,8 +377,8 @@
 
 	<script>
 	var ctx = document.getElementById("myChart1").getContext('2d');
-	var f = {{ feedback }};
-  var s = {{ subject|safe }};
+	var f = {{ arr }};
+  var s = {{ count_arr|safe }};
 	var chart =  new Chart(ctx, {
     type: 'bar',
     data: {
@@ -421,7 +400,6 @@
             yAxes: [{
                 ticks: {
                     beginAtZero:true,
-                    max:100
                 }
             }]
         }
