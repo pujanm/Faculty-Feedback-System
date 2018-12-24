@@ -162,6 +162,16 @@ def get_teacher_name(request, subject):
     return HttpResponse(json.dumps({'teacher_names': teacher_names}), content_type="application/json")
 
 
+def get_subject_on_semester(request, semester):
+    subs = [i.name for i in Subject.objects.filter(semester=semester)]
+    f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
+    subjects_done_feedback = [i.subject.name for i in f]
+    final = [i for i in subs if i not in subjects_done_feedback]
+    print(final)
+
+    return HttpResponse(json.dumps({'subjects': final}), content_type="application/json")
+
+
 def teacher_detailed_analytics(request, subject):
     subject = Subject.objects.filter(name=subject)
     user = request.user

@@ -114,12 +114,21 @@
 										<form method="post">
 											{% csrf_token %}
 											<div class="form-group">
+												<label for="text">Semester :</label>
+												<select class="form-control" name="semester" id="sem">
+														<option>Select a Semester</option>
+														<option>3</option>
+														<option>4</option>
+														<option>5</option>
+														<option>6</option>
+														<option>7</option>
+														<option>8</option>
+												</select>
+											</div>
+											<div class="form-group">
 												<label for="text">Subject :</label>
 												<select class="form-control" name="subject" id="sub">
-														<option>Select a Subject</option>
-                            {% for subject in subject_list %}
-															<option>{{ subject }}</option>
-                            {% endfor %}
+
 												</select>
 											</div>
 											<div class="form-group">
@@ -261,6 +270,30 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 			$(document).ready( () => {
+
+				$("#sem").change( () => {
+					var semester = $("#sem").val();
+					$.ajax({
+						url: `/get_subject_on_semester/${semester}`,
+						type: 'GET',
+						datatype: 'json',
+						success: (res) => {
+							$("#sub").empty();
+							var subjects = []
+							for(var i=0; i < res['subjects'].length; i++){
+								subjects.push(res['subjects'][i])
+							}
+							option_str = "";
+						  option_str += `<option>Select a Subject</option>`;
+							for(var i=0; i < subjects.length; i++) {
+								option_str += `<option>${subjects[i]}</option>`;
+							}
+							console.log(option_str);
+							$("#sub").append(option_str);
+						}
+					})
+				});
+
 				$("#sub").change( () => {
 					var subject = $("#sub").val();
 					$.ajax({
