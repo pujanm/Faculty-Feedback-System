@@ -8,6 +8,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^analytics/$', views.analytics, name='analytics'),
     url(r'^teacher_analytics/$', views.teacher_analytics, name='teacher_analytics'),
+    url(r'^admin_analytics/$', views.admin_analytics, name='admin_analytics'),
+    url(r'^admin_analytics/(?P<subject>[\w ]+)/$', views.admin_analytics_detailed, name="admin_analytics_detailed"),
     url(r'^signup/$', views.signup, name='signup'),
     url(r'^login/$', views.logIn, name='login'),
     url(r'^logout/$', views.logOut, name='logout'),

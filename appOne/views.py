@@ -10,66 +10,69 @@ import json
 
 def index(request):
     if request.user.is_authenticated():
-        if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
-            f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
-            subjects_done_feedback = [i.subject.name for i in f]
-            username = request.user
-            u = UserProfile.objects.filter(user=username)
-            fname = u[0].fname
-            lname = u[0].lname
-            subject_list = [i.name for i in u[0].subject.all()]
-            teacher_list = TeacherProfile.objects.all()
-            for i in subject_list:
-                if i in subjects_done_feedback:
-                    try:
-                        subject_list.remove(i)
-                    except ValueError:
-                        pass
-            print(subject_list)
-            if request.POST:
-                u = u[0]
-                s = request.POST.get('subject')
-                t = request.POST.get('teacher')
-                f1 = request.POST.get('f1')
-                f2 = request.POST.get('f2')
-                f3 = request.POST.get('f3')
-                f4 = request.POST.get('f4')
-                f5 = request.POST.get('f5')
-                f6 = request.POST.get('f6')
-                f7 = request.POST.get('f7')
-                f8 = request.POST.get('f8')
-                f9 = request.POST.get('f9')
-                sug = request.POST.get('sug')
-                tea = TeacherProfile.objects.filter(fname=t.split(" ")[0])
-                print(tea)
-                sub = Subject.objects.filter(name=s)
-                print(sub)
-                f = Feedback.objects.create(
-                    student=u,
-                    subject=sub[0],
-                    teacher=tea[0],
-                    res1=f1,
-                    res2=f2,
-                    res3=f3,
-                    res4=f4,
-                    res5=f5,
-                    res6=f6,
-                    res7=f7,
-                    res8=f8,
-                    res9=f9,
-                    sug=sug
-                )
-                f.save()
-                return redirect('analytics')
-            context = {
-                'fname': fname,
-                'lname': lname,
-                'teacher_list': teacher_list,
-                'subject_list': subject_list
-            }
-            return render(request, 'appOne/dashboard.html', context)
+        if request.user.is_superuser:
+            return redirect("admin_analytics")
         else:
-            return redirect('teacher_analytics')
+            if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
+                f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
+                subjects_done_feedback = [i.subject.name for i in f]
+                username = request.user
+                u = UserProfile.objects.filter(user=username)
+                fname = u[0].fname
+                lname = u[0].lname
+                subject_list = [i.name for i in u[0].subject.all()]
+                teacher_list = TeacherProfile.objects.all()
+                for i in subject_list:
+                    if i in subjects_done_feedback:
+                        try:
+                            subject_list.remove(i)
+                        except ValueError:
+                            pass
+                print(subject_list)
+                if request.POST:
+                    u = u[0]
+                    s = request.POST.get('subject')
+                    t = request.POST.get('teacher')
+                    f1 = request.POST.get('f1')
+                    f2 = request.POST.get('f2')
+                    f3 = request.POST.get('f3')
+                    f4 = request.POST.get('f4')
+                    f5 = request.POST.get('f5')
+                    f6 = request.POST.get('f6')
+                    f7 = request.POST.get('f7')
+                    f8 = request.POST.get('f8')
+                    f9 = request.POST.get('f9')
+                    sug = request.POST.get('sug')
+                    tea = TeacherProfile.objects.filter(fname=t.split(" ")[0])
+                    print(tea)
+                    sub = Subject.objects.filter(name=s)
+                    print(sub)
+                    f = Feedback.objects.create(
+                        student=u,
+                        subject=sub[0],
+                        teacher=tea[0],
+                        res1=f1,
+                        res2=f2,
+                        res3=f3,
+                        res4=f4,
+                        res5=f5,
+                        res6=f6,
+                        res7=f7,
+                        res8=f8,
+                        res9=f9,
+                        sug=sug
+                    )
+                    f.save()
+                    return redirect('analytics')
+                context = {
+                    'fname': fname,
+                    'lname': lname,
+                    'teacher_list': teacher_list,
+                    'subject_list': subject_list
+                }
+                return render(request, 'appOne/dashboard.html', context)
+            else:
+                return redirect('teacher_analytics')
     else:
         return redirect('signup')
 
@@ -197,6 +200,47 @@ def teacher_detailed_analytics(request, subject):
     return render(request, "appOne/teacher_detailed_analytics.html", context)
 
 
+def admin_analytics(request):
+    if request.user.is_authenticated():
+        subject = Subject.objects.all()
+        context = {
+            "subject": subject,
+        }
+        return render(request, "appOne/admin_analytics.html", context)
+    else:
+        return redirect('signup')
+
+
+def admin_analytics_detailed(request, subject):
+    if request.user.is_authenticated():
+        subject = Subject.objects.filter(name=subject)
+        subject_students = subject[0].subject_students.all()
+        subject_students_users = [i.user.username for i in subject_students]
+        print(subject_students_users)
+
+        subject_feedback = Feedback.objects.filter(subject=subject)
+        subject_feedback_users = [i.student.user.username for i in subject_feedback]
+        print(subject_feedback_users)
+
+        # subject_feedback_users_notfilled_name = []
+        subject_feedback_users_notfilled = []
+        for i in subject_students_users:
+            if i not in subject_feedback_users:
+                user = User.objects.filter(username=i)
+                studentPro = UserProfile.objects.filter(user=user)[0]
+                # subject_feedback_users_notfilled_name.append(studentPro.fname + " " + studentPro.lname)
+                subject_feedback_users_notfilled.append([i, (studentPro.fname + " " + studentPro.lname)])
+
+        context = {
+            "sapid": subject_feedback_users_notfilled,
+            "subject": subject[0],
+        }
+        return render(request, "appOne/admin_analytics_detailed.html", context)
+
+    else:
+        return redirect('signup')
+
+
 def teacherSignup(request):
 
     if request.method == "POST":
@@ -257,7 +301,10 @@ def teacherLogin(request):
         user = authenticate(username=username, password=password)
         if user:
             login(request, user)
-            return redirect('teacher_analytics')
+            if user.is_superuser:
+                return redirect('admin_analytics')
+            else:
+                return redirect('teacher_analytics')
         else:
             return render(request, 'appOne/teacher_login.html', {'i': 'Invalid Password/SAP ID'})
     return render(request, 'appOne/teacher_login.html', {'i': ''})
