@@ -5,9 +5,10 @@ from django.contrib.auth.models import User
 
 class Subject(models.Model):
     name = models.CharField(max_length=250, blank=False)
+    semester = models.IntegerField(default=5)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.name) + " - Semester "  + str(self.semester)
 
 
 class TeacherProfile(models.Model):
