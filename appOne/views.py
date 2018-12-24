@@ -12,13 +12,20 @@ import json
 def index(request):
     if request.user.is_authenticated():
         if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
-
+            f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
+            subjects_done_feedback = [i.subject.name for i in f]
             username = request.user
             u = UserProfile.objects.filter(user=username)
             fname = u[0].fname
             lname = u[0].lname
             subject_list = [i.name for i in u[0].subject.all()]
             teacher_list = TeacherProfile.objects.all()
+            for i in subject_list:
+                if i in subjects_done_feedback:
+                    try:   
+                        subject_list.remove(i)
+                    except ValueError:
+                        pass
             print(subject_list)
             # teacher_filtered = TeacherProfileFilter(request.GET, queryset=teacher_list)
             if request.POST:
@@ -78,8 +85,8 @@ def analytics(request):
     #depending upon the semester.
 
     if Feedback.objects.all().count() != 0:
-        final = []
         subject_list = []
+        avg_sub = []
         if request.user.is_authenticated():
             user = request.user
             student = UserProfile.objects.filter(user=user)
@@ -89,13 +96,11 @@ def analytics(request):
                 if Feedback.objects.filter(subject=sub_obj).count() != 0:
                     student = UserProfile.objects.filter(user=request.user)
                     sub = Feedback.objects.filter(subject=sub_obj, student=student)
-                    avg_sub = []
                     print(sub)
-                    for i in range(0, len(sub)):
-                        sum = 0
-                        sum = sub[i].res1 / 5 + sub[i].res2 / 5  + sub[i].res3 / 5 + sub[i].res4 / 5 + sub[i].res5 / 5 + sub[i].res6 / 5 + sub[i].res7 / 5 + sub[i].res8 / 5 + sub[i].res9 / 5
-                        avg = sum / 9
-                        avg_sub.append(avg * 100)
+                    sum = 0
+                    sum = sub[0].res1 / 5 + sub[0].res2 / 5  + sub[0].res3 / 5 + sub[0].res4 / 5 + sub[0].res5 / 5 + sub[0].res6 / 5 + sub[0].res7 / 5 + sub[0].res8 / 5 + sub[0].res9 / 5
+                    avg = sum / 9
+                    avg_sub.append(round(avg * 100))
                     # sum_sub = 0
                     # for i in range(0, len(avg_sub)):
                     #     sum_sub += avg_sub[i]
@@ -103,13 +108,14 @@ def analytics(request):
                     # av_sub = sum_sub / len(avg_sub)
                     # print(av_sub)
                     # final.append(int((av_sub / 5) * 100))
-                    subject_list.append(subject[0])
+                    subject_list.append(subject)
                     print(avg_sub)
             context = {
                     'feedback': avg_sub,
                     'subject': subject_list,
                     'f': ''
                 }
+            print(context['subject'])
             return render(request, 'appOne/analytics.html', context)
         else:
             return redirect('signup')

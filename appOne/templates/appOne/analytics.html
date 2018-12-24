@@ -384,8 +384,9 @@
 	var ctx = document.getElementById("myChart1").getContext('2d');
 	var f = {{ feedback }};
 	var s = {{ subject|safe }};
+    console.log(s);
 	var chart =  new Chart(ctx, {
-    type: 'pie',
+    type: 'bar',
     data: {
       labels: s,
       datasets: [{
@@ -399,6 +400,16 @@
 				],
         data: f
       }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true,
+                    max:100
+                }
+            }]
+        }
     }
 });
 
