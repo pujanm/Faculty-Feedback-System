@@ -143,7 +143,7 @@
                         <span class="icon-bar bar2"></span>
                         <span class="icon-bar bar3"></span>
                     </button>
-                    <a class="navbar-brand" href="{% url 'analytics' %}">Your Overall Performance</a>
+                    <a class="navbar-brand" href="{% url 'analytics' %}">Student's Who Didn't Fill Feedback</a>
                 </div>
                 <!-- <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
@@ -280,12 +280,12 @@
                                         </thead>
                                         <tbody>
 								{% for user in sapid %}
-                                    
+
                                     <tr>
                                     <td>{{ user.0 }}</td>
                                     <td>{{ user.1 }}</td>
                                     </tr>
-                                        
+
                                 {% endfor %}
                                 </tbody>
                                     </table>

@@ -50,7 +50,6 @@
 									Faculty Feedback System
                 </a>
             </div>
-
             <ul class="nav">
 							{% if user.is_authenticated %}
                 <li class="active">
@@ -59,6 +58,12 @@
                         <p>Feedback Form</p>
                     </a>
                 </li>
+								<li>
+ 									<a href="" data-toggle="modal" data-target="#myModal">
+										<i class="ti-pencil-alt"></i>
+										<p>Edit Profile</p>
+									</a>
+								</li>
 								<li>
                     <a href="{% url 'analytics' %}">
                         <i class="ti-pie-chart"></i>
@@ -89,6 +94,55 @@
     	</div>
     </div>
 
+		<div class="container">
+			<!-- Modal -->
+			<div class="modal fade" id="myModal" role="dialog">
+				<div class="modal-dialog">
+
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Edit Your Profile!</h4>
+						</div>
+						<div class="modal-body">
+							<form method="post" name="edit-profile-form">
+									{% csrf_token %}
+									<div class="form-group">
+										<label for="text">First Name :</label>
+										<input type="text" class="form-control" id="fname" name="fname" placeholder="{{ fname }}" value="{{ fname }}">
+									</div>
+									<div class="form-group">
+										<label for="text">Last Name :</label>
+										<input type="text" class="form-control" id="lname" name="lname" placeholder="{{ lname }}" value="{{ lname }}">
+									</div>
+									<div class="form-group">
+										<label for="text">Email :</label>
+										<input type="text" class="form-control" id="email" name="email" placeholder="{{ email }}" value="{{ email }}">
+									</div>
+									<div class="form-group">
+										<label for="text">Semester :</label>
+										<select class="form-control" name="semester" id="sem">
+												<option>3</option>
+												<option>4</option>
+												<option>5</option>
+												<option>6</option>
+												<option>7</option>
+												<option>8</option>
+										</select>
+									</div>
+									<button type="submit" class="btn btn-default">Submit</button>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
     <div class="main-panel">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
@@ -100,7 +154,7 @@
                         <span class="icon-bar bar3"></span>
                     </button>
                     <a class="navbar-brand" href="{% url 'index' %}">Feedback Form</a>
-										<h4>Hi {{ fname }}!</h4>
+										<h4>Hi {{ fname }} {{ lname }}!</h4>
                 </div>
             </div>
         </nav>
@@ -114,21 +168,12 @@
 										<form method="post">
 											{% csrf_token %}
 											<div class="form-group">
-												<label for="text">Semester :</label>
-												<select class="form-control" name="semester" id="sem">
-														<option>Select a Semester</option>
-														<option>3</option>
-														<option>4</option>
-														<option>5</option>
-														<option>6</option>
-														<option>7</option>
-														<option>8</option>
-												</select>
-											</div>
-											<div class="form-group">
 												<label for="text">Subject :</label>
 												<select class="form-control" name="subject" id="sub">
-
+													<option>Select a Subject</option>
+													{% for sub in subject_list %}
+														<option>{{ sub }}</option>
+													{% endfor %}
 												</select>
 											</div>
 											<div class="form-group">
@@ -270,29 +315,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script type="text/javascript">
 			$(document).ready( () => {
-
-				$("#sem").change( () => {
-					var semester = $("#sem").val();
-					$.ajax({
-						url: `/get_subject_on_semester/${semester}`,
-						type: 'GET',
-						datatype: 'json',
-						success: (res) => {
-							$("#sub").empty();
-							var subjects = []
-							for(var i=0; i < res['subjects'].length; i++){
-								subjects.push(res['subjects'][i])
-							}
-							option_str = "";
-						  option_str += `<option>Select a Subject</option>`;
-							for(var i=0; i < subjects.length; i++) {
-								option_str += `<option>${subjects[i]}</option>`;
-							}
-							console.log(option_str);
-							$("#sub").append(option_str);
-						}
-					})
-				});
 
 				$("#sub").change( () => {
 					var subject = $("#sub").val();

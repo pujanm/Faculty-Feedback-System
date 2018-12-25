@@ -20,6 +20,8 @@ def index(request):
                 u = UserProfile.objects.filter(user=username)
                 fname = u[0].fname
                 lname = u[0].lname
+                email = request.user.email
+                semester = u[0].semester
                 subject_list = [i.name for i in u[0].subject.all()]
                 teacher_list = TeacherProfile.objects.all()
                 for i in subject_list:
@@ -30,43 +32,69 @@ def index(request):
                             pass
                 print(subject_list)
                 if request.POST:
-                    u = u[0]
-                    s = request.POST.get('subject')
-                    t = request.POST.get('teacher')
-                    f1 = request.POST.get('f1')
-                    f2 = request.POST.get('f2')
-                    f3 = request.POST.get('f3')
-                    f4 = request.POST.get('f4')
-                    f5 = request.POST.get('f5')
-                    f6 = request.POST.get('f6')
-                    f7 = request.POST.get('f7')
-                    f8 = request.POST.get('f8')
-                    f9 = request.POST.get('f9')
-                    sug = request.POST.get('sug')
-                    tea = TeacherProfile.objects.filter(fname=t.split(" ")[0])
-                    print(tea)
-                    sub = Subject.objects.filter(name=s)
-                    print(sub)
-                    f = Feedback.objects.create(
-                        student=u,
-                        subject=sub[0],
-                        teacher=tea[0],
-                        res1=f1,
-                        res2=f2,
-                        res3=f3,
-                        res4=f4,
-                        res5=f5,
-                        res6=f6,
-                        res7=f7,
-                        res8=f8,
-                        res9=f9,
-                        sug=sug
-                    )
-                    f.save()
-                    return redirect('analytics')
+                    if request.POST.get('fname'):
+                        fname = request.POST.get('fname')
+                        lname = request.POST.get('lname')
+                        email = request.POST.get('email')
+                        semester = request.POST.get('semester')
+                        user = UserProfile.objects.filter(user=request.user)[0]
+                        user.fname = fname
+                        user.lname = lname
+                        user.semester = semester
+                        user.subject = Subject.objects.filter(semester=semester)
+                        request.user.email = email
+                        request.user.save()
+                        user.save()
+                        subject_list = [i.name for i in user.subject.all() if i.name not in subjects_done_feedback]
+                        context = {
+                            'fname': fname,
+                            'lname': lname,
+                            'email': email,
+                            'semester': semester,
+                            'teacher_list': teacher_list,
+                            'subject_list': subject_list
+                        }
+                        return render(request, 'appOne/dashboard.html', context)
+                    else:
+                        u = u[0]
+                        s = request.POST.get('subject')
+                        t = request.POST.get('teacher')
+                        f1 = request.POST.get('f1')
+                        f2 = request.POST.get('f2')
+                        f3 = request.POST.get('f3')
+                        f4 = request.POST.get('f4')
+                        f5 = request.POST.get('f5')
+                        f6 = request.POST.get('f6')
+                        f7 = request.POST.get('f7')
+                        f8 = request.POST.get('f8')
+                        f9 = request.POST.get('f9')
+                        sug = request.POST.get('sug')
+                        tea = TeacherProfile.objects.filter(fname=t.split(" ")[0])
+                        print(tea)
+                        sub = Subject.objects.filter(name=s)
+                        print(sub)
+                        f = Feedback.objects.create(
+                            student=u,
+                            subject=sub[0],
+                            teacher=tea[0],
+                            res1=f1,
+                            res2=f2,
+                            res3=f3,
+                            res4=f4,
+                            res5=f5,
+                            res6=f6,
+                            res7=f7,
+                            res8=f8,
+                            res9=f9,
+                            sug=sug
+                        )
+                        f.save()
+                        return redirect('analytics')
                 context = {
                     'fname': fname,
                     'lname': lname,
+                    'email': email,
+                    'semester': semester,
                     'teacher_list': teacher_list,
                     'subject_list': subject_list
                 }
@@ -203,8 +231,13 @@ def teacher_detailed_analytics(request, subject):
 def admin_analytics(request):
     if request.user.is_authenticated():
         subject = Subject.objects.all()
+        subject_dict = {}
+        for i in range(3, 9):
+            subject_dict[i] = Subject.objects.filter(semester=i)
+        print(subject_dict)
         context = {
             "subject": subject,
+            "subject_dict": subject_dict,
         }
         return render(request, "appOne/admin_analytics.html", context)
     else:

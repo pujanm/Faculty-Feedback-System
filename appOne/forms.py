@@ -14,10 +14,11 @@ class UserForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     fname = forms.CharField(label='First Name')
     lname = forms.CharField(label='Last Name')
-
+    semester = forms.IntegerField()
+    
     class Meta():
         model = UserProfile
-        fields = ('fname', 'lname')
+        fields = ('fname', 'lname', 'semester')
 
 
 class TeacherProfileForm(forms.ModelForm):

@@ -26,7 +26,8 @@ class UserProfile(models.Model):
     fname = models.CharField(max_length=50, blank=True)
     lname = models.CharField(max_length=50, blank=True)
     subject = models.ManyToManyField(Subject, related_name="subject_students")
-
+    semester = models.IntegerField(default=3)
+    
     def __str__(self):
         return str(self.user.username)
 
