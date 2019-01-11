@@ -137,7 +137,7 @@ def analytics(request):
             return redirect('signup')
     else:
         if request.user.is_authenticated():
-            return render(request, 'appOne/analytics.html', {'f': 'No Fucks Yet!!'})
+            return render(request, 'appOne/analytics.html', {'f': 'No feedback found'})
         else:
             return redirect('signup')
 
@@ -177,7 +177,7 @@ def teacher_analytics(request):
             return redirect('signup')
     else:
         if request.user.is_authenticated():
-            return render(request, 'appOne/teacher_analytics.html', {'f': 'No Fucks Yet!!'})
+            return render(request, 'appOne/teacher_analytics.html', {'f': 'No feedback found'})
         else:
             return redirect('signup')
 
