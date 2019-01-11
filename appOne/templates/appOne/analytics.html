@@ -122,12 +122,13 @@
                                     <div class="form-group">
                                         <label for="text">Semester :</label>
                                         <select class="form-control" name="semester" id="sem">
-                                                <option>3</option>
-                                                <option>4</option>
-                                                <option>5</option>
-                                                <option>6</option>
-                                                <option>7</option>
-                                                <option>8</option>
+																						{% for i in numbers %}
+																							{% if i == semester %}
+																								<option selected="selected">{{ semester }}</option>
+																							{% else %}
+																							 <option>{{ i }}</option>
+																							{% endif %}
+																						{% endfor %}
                                         </select>
                                     </div>
                                     <button type="submit" class="btn btn-default">Submit</button>

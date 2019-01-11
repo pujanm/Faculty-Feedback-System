@@ -13,6 +13,9 @@ def index(request):
         if request.user.is_superuser:
             return redirect("admin_analytics")
         else:
+            user = UserProfile.objects.filter(user=request.user)[0]
+            user.subject = Subject.objects.filter(semester=user.semester)
+            user.save()
             if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
                 f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
                 subjects_done_feedback = [i.subject.name for i in f]
@@ -52,7 +55,8 @@ def index(request):
                             'email': email,
                             'semester': semester,
                             'teacher_list': teacher_list,
-                            'subject_list': subject_list
+                            'subject_list': subject_list,
+                            'numbers': [i for i in range(3, 9)]
                         }
                         return render(request, 'appOne/dashboard.html', context)
                     else:
@@ -95,6 +99,7 @@ def index(request):
                     'lname': lname,
                     'email': email,
                     'semester': semester,
+                    'numbers': [i for i in range(3, 9)],
                     'teacher_list': teacher_list,
                     'subject_list': subject_list
                 }
@@ -114,6 +119,11 @@ def analytics(request):
         if request.user.is_authenticated():
             user = request.user
             student = UserProfile.objects.filter(user=user)
+            fname = student[0].fname
+            lname = student[0].lname
+            email = request.user.email
+            semester = student[0].semester
+
             subjects = [i.name for i in student[0].subject.all()]
             for subject in subjects:
                 sub_obj = Subject.objects.filter(name=subject)
@@ -127,8 +137,13 @@ def analytics(request):
                     subject_list.append(subject)
                     print(avg_sub)
             context = {
+                    'fname': fname,
+                    'lname': lname,
+                    'email': email,
+                    'semester': semester,
                     'feedback': avg_sub,
                     'subject': subject_list,
+                    'numbers': [i for i in range(3, 9)],
                     'f': ''
                 }
             print(context['subject'])
@@ -262,7 +277,7 @@ def admin_analytics_detailed(request, subject):
                 user = User.objects.filter(username=i)
                 studentPro = UserProfile.objects.filter(user=user)[0]
                 # subject_feedback_users_notfilled_name.append(studentPro.fname + " " + studentPro.lname)
-                subject_feedback_users_notfilled.append([i, (studentPro.fname + " " + studentPro.lname)])
+                subject_feedback_users_notfilled.append([i, (studentPro.fname + " " + studentPro.lname), studentPro.phone_no, user[0].email])
 
         context = {
             "sapid": subject_feedback_users_notfilled,

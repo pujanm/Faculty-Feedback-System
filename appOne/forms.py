@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import UserProfile, TeacherProfile
-
+import re
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -15,10 +15,10 @@ class UserProfileForm(forms.ModelForm):
     fname = forms.CharField(label='First Name')
     lname = forms.CharField(label='Last Name')
     semester = forms.IntegerField()
-    
+
     class Meta():
         model = UserProfile
-        fields = ('fname', 'lname', 'semester')
+        fields = ('fname', 'lname', 'semester', 'phone_no')
 
 
 class TeacherProfileForm(forms.ModelForm):

@@ -123,12 +123,13 @@
 									<div class="form-group">
 										<label for="text">Semester :</label>
 										<select class="form-control" name="semester" id="sem">
-												<option>3</option>
-												<option>4</option>
-												<option>5</option>
-												<option>6</option>
-												<option>7</option>
-												<option>8</option>
+												{% for i in numbers %}
+													{% if i == semester %}
+														<option selected="selected">{{ semester }}</option>
+													{% else %}
+													 <option>{{ i }}</option>
+													{% endif %}
+												{% endfor %}
 										</select>
 									</div>
 									<button type="submit" class="btn btn-default">Submit</button>
@@ -154,7 +155,6 @@
                         <span class="icon-bar bar3"></span>
                     </button>
                     <a class="navbar-brand" href="{% url 'index' %}">Feedback Form</a>
-										<h4>Hi {{ fname }} {{ lname }}!</h4>
                 </div>
             </div>
         </nav>
@@ -163,6 +163,7 @@
         <div class="content">
             <div class="container-fluid">
                 <div class="row">
+										<h4>Hi {{ fname }} {{ lname }}!</h4>
 										<h3>SAP ID: {{ request.user }}</h3>
 										<br>
 										<form method="post">

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import RegexValidator
 # Create your models here.
 
 
@@ -26,8 +27,10 @@ class UserProfile(models.Model):
     fname = models.CharField(max_length=50, blank=True)
     lname = models.CharField(max_length=50, blank=True)
     subject = models.ManyToManyField(Subject, related_name="subject_students")
+    phone_regex = RegexValidator(regex=r'^\d{10}$', message="Phone number must be of 10 digits.")
+    phone_no = models.CharField(validators=[phone_regex], max_length=10)
     semester = models.IntegerField(default=3)
-    
+
     def __str__(self):
         return str(self.user.username)
 
