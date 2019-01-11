@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 import json
-
+import math
 
 def index(request):
     if request.user.is_authenticated():
@@ -232,12 +232,26 @@ def teacher_detailed_analytics(request, subject):
         avg = round(sum/9.0)
         arr[avg - 1] += 1
 
-    print(arr)
+    sum = [0 for i in range(9)]
+    for i in feedback:
+        sum[0] += i.res1
+        sum[1] += i.res2
+        sum[2] += i.res3
+        sum[3] += i.res4
+        sum[4] += i.res5
+        sum[5] += i.res6
+        sum[6] += i.res7
+        sum[7] += i.res8
+        sum[8] += i.res9
+    avg = [math.ceil(i / len(feedback)) for i in sum]
+    print(avg)
+    
     context = {
         'subject_name': subject[0].name,
         'fname': teacher[0].fname,
         'lname': teacher[0].lname,
         'arr': arr,
+        'avg': avg,
         'count_arr': count_arr
     }
     return render(request, "appOne/teacher_detailed_analytics.html", context)

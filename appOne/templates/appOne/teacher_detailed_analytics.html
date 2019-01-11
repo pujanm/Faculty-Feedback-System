@@ -109,6 +109,34 @@
 															<div class="chart-container">
 																<canvas id="myChart1"></canvas>
 															</div>
+															<div class="chart-container">
+																<canvas id="myChart2"></canvas>
+															</div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+								<div class="row">
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="header">
+                                <h3 class="title">Questions Map</h3>
+																<h5>
+																	Q1 - Abilities to understand student's difficulties and willingness to help them <br>
+																	Q2 - Commitment to academic work in the class <br>
+																	Q3 - Regularity and Punctuality <br>
+																	Q4 - Interaction in the class <br>
+																	Q5 - Coverage of syllabus <br>
+																	Q6 - Planning of lessons throughout the Semester <br>
+																	Q7 - Effective communication of subject matter <br>
+																	Q8 - Management of lecture and class control <br>
+																	Q9 - Overall ability to maintain sancity of Teaching - Learning process <br>
+																</h5>
+                            </div>
+
+                            <div class="content">
 
                             </div>
                         </div>
@@ -145,35 +173,69 @@
 	<script src="../../static/js/demo.js"></script>
 
 	<script>
-	var ctx = document.getElementById("myChart1").getContext('2d');
-	var f = {{ arr }};
-  var s = {{ count_arr|safe }};
-	var chart =  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: s,
-      datasets: [{
-        label: "Feedback",
-        backgroundColor: ["rgba(153,255,51,0.4)",
+		var ctx1 = document.getElementById("myChart1").getContext('2d');
+		var f = {{ arr }};
+	  var s = {{ count_arr|safe }};
+		var chart1 =  new Chart(ctx1, {
+	    type: 'bar',
+	    data: {
+	      labels: s,
+	      datasets: [{
+	        label: "Feedback",
+	        backgroundColor: ["rgba(153,255,51,0.4)",
+														"rgba(255,153,0,0.4)",
+														"rgba(29, 88, 183, 0.4)",
+														"rgb(237, 42, 88, 0.4)",
+														"rgb(194, 41, 237, 0.4)",
+														"rgb(235, 255, 20, 0.4)"
+					],
+	        data: f
+	      }]
+	    },
+	    options: {
+	        scales: {
+	            yAxes: [{
+	                ticks: {
+	                    beginAtZero:true,
+	                }
+	            }]
+	        }
+	    }
+	});
+
+	// CHART 2
+
+	var ctx2 = document.getElementById("myChart2").getContext('2d');
+	var avg = {{ avg }};
+	var chart2 =  new Chart(ctx2, {
+		type: 'bar',
+		data: {
+			labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6', 'Q7', 'Q8', 'Q9'],
+			datasets: [{
+				label: "Feedback",
+				backgroundColor: ["rgba(153,255,51,0.4)",
 													"rgba(255,153,0,0.4)",
 													"rgba(29, 88, 183, 0.4)",
 													"rgb(237, 42, 88, 0.4)",
 													"rgb(194, 41, 237, 0.4)",
-													"rgb(235, 255, 20, 0.4)"
+													"rgb(1, 124, 247, 0.4)",
+													"rgb(19, 163, 62, 0.4)",
+													"rgb(249, 56, 2, 0.4)",
+													"rgb(247, 2, 198, 0.4)"
 				],
-        data: f
-      }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true,
-                }
-            }]
-        }
-    }
-});
+				data: avg
+			}]
+		},
+		options: {
+				scales: {
+						yAxes: [{
+								ticks: {
+										beginAtZero:true,
+								}
+						}]
+				}
+		}
+	});
 
 
 	var t = document.getElementById('sub');
