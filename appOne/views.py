@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 import json
 import math
 
+
 def index(request):
     if request.user.is_authenticated():
         if request.user.is_superuser:
@@ -25,6 +26,7 @@ def index(request):
                 lname = u[0].lname
                 email = request.user.email
                 semester = u[0].semester
+                phone_no = u[0].phone_no
                 subject_list = [i.name for i in u[0].subject.all()]
                 teacher_list = TeacherProfile.objects.all()
                 for i in subject_list:
@@ -33,17 +35,19 @@ def index(request):
                             subject_list.remove(i)
                         except ValueError:
                             pass
-                print(subject_list)
+                # print(subject_list)
                 if request.POST:
                     if request.POST.get('fname'):
                         fname = request.POST.get('fname')
                         lname = request.POST.get('lname')
                         email = request.POST.get('email')
                         semester = request.POST.get('semester')
+                        phone_no = request.POST.get('phone_no')
                         user = UserProfile.objects.filter(user=request.user)[0]
                         user.fname = fname
                         user.lname = lname
                         user.semester = semester
+                        user.phone_no = phone_no
                         user.subject = Subject.objects.filter(semester=semester)
                         request.user.email = email
                         request.user.save()
@@ -54,6 +58,7 @@ def index(request):
                             'lname': lname,
                             'email': email,
                             'semester': semester,
+                            'phone_no': phone_no,
                             'teacher_list': teacher_list,
                             'subject_list': subject_list,
                             'numbers': [i for i in range(3, 9)]
@@ -99,6 +104,7 @@ def index(request):
                     'lname': lname,
                     'email': email,
                     'semester': semester,
+                    'phone_no': phone_no,
                     'numbers': [i for i in range(3, 9)],
                     'teacher_list': teacher_list,
                     'subject_list': subject_list
@@ -245,7 +251,7 @@ def teacher_detailed_analytics(request, subject):
         sum[8] += i.res9
     avg = [math.ceil(i / len(feedback)) for i in sum]
     print(avg)
-    
+
     context = {
         'subject_name': subject[0].name,
         'fname': teacher[0].fname,
@@ -254,6 +260,7 @@ def teacher_detailed_analytics(request, subject):
         'avg': avg,
         'count_arr': count_arr
     }
+
     return render(request, "appOne/teacher_detailed_analytics.html", context)
 
 

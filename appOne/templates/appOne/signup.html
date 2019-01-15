@@ -23,10 +23,6 @@
     <link href="../../static/css/paper-dashboard.css" rel="stylesheet"/>
 
 
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
-    <link href="../../static/css/demo.css" rel="stylesheet" />
-
-
     <!--  Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
@@ -41,6 +37,9 @@
 	#signup {
 		width: 50%;
 		margin: 0 auto;
+	}
+	#id_fname-error, #id_lname-error,  #id_username-error,  #id_semester-error,  #id_email-error,  #id_password-error,  #id_phone_no-error {
+		color: red;
 	}
 </style>
 <body>
@@ -141,31 +140,71 @@
 
 	<!-- Paper Dashboard DEMO methods, don't include it in your project! -->
 	<script src="../../static/js/demo.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
 
 	<script>
-	var ctx = document.getElementById("myChart1").getContext('2d');
-	var f = {{ feedback }};
-	var chart =  new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: ["AM3", "AOA", "COA","CG", "OS", "OSL"],
-      datasets: [{
-        label: "Feedback",
-        backgroundColor: ["rgba(153,255,51,0.4)",
-													"rgba(255,153,0,0.4)",
-													"rgba(29, 88, 183, 0.4)",
-													"rgb(237, 42, 88, 0.4)",
-													"rgb(194, 41, 237, 0.4)",
-													"rgb(235, 255, 20, 0.4)"
-				],
-        data: f
-      }]
-    }
-});
+		$.validator.addMethod('positiveNumber',
+		function (value) {
+				return Number(value) > 0;
+		}, 'Please enter a positive number.');
 
+		$("#signup").validate({
+			rules: {
+					fname: {
+						required: true,
+						lettersonly: true
+					},
+					lname: {
+						required: true,
+						lettersonly: true
+					},
+					email: {
+						required: true,
+						email: true
+					},
+					username: {
+						required: true,
+						positiveNumber: true,
+						nowhitespace: true,
+						minlength: 11,
+						maxlength: 11
+					},
+					password: {
+						required: true
+					},
+					semester: {
+						required: true,
+						positiveNumber: true,
+					},
+					phone_no: {
+					  required: true,
+						positiveNumber: true,
+						minlength: 10,
+						maxlength: 10
+					}
+			},
+			messages: {
+                fname: "Please enter a valid first name.",
+                lname: "Please enter a valid last name.",
+                username: {
+                    required: "Please enter your SAP ID.",
+                    minlength: "Please enter a valid SAP ID.",
+										maxlength: "Please enter a valid SAP ID.",
+                    remote: "Please enter your SAP ID."
+                },
+                password: {
+                    required: "Please provide a password,",
+                    minlength: jQuery.validator.format("Enter at least {0} characters.")
+                },
+                email: {
+                    required: "Please enter a valid email address",
+                    minlength: "Please enter a valid email address",
+                    remote: jQuery.validator.format("{0} is already in use")
+                },
 
-	var t = document.getElementById('sub');
-	console.log(t);
+            }
+		});
 	</script>
 
 </html>
