@@ -20,6 +20,7 @@ def index(request):
             if TeacherProfile.objects.all().filter(user=request.user).count() == 0:
                 f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
                 subjects_done_feedback = [i.subject.name for i in f]
+                print("Subject done feedback: " + str(subjects_done_feedback))
                 username = request.user
                 u = UserProfile.objects.filter(user=username)
                 fname = u[0].fname
@@ -29,13 +30,15 @@ def index(request):
                 phone_no = u[0].phone_no
                 subject_list = [i.name for i in u[0].subject.all()]
                 teacher_list = TeacherProfile.objects.all()
-                for i in subject_list:
-                    if i in subjects_done_feedback:
-                        try:
-                            subject_list.remove(i)
-                        except ValueError:
-                            pass
-                # print(subject_list)
+
+                subject_list = [i for i in subject_list if i not in subjects_done_feedback]
+                # for i in subject_list:
+                #     if i in subjects_done_feedback:
+                #         try:
+                #             subject_list.remove(i)
+                #         except ValueError:
+                #             pass
+                print("Subjects not feedback: " + str(subject_list))
                 if request.POST:
                     if request.POST.get('fname'):
                         fname = request.POST.get('fname')
@@ -129,6 +132,7 @@ def analytics(request):
             lname = student[0].lname
             email = request.user.email
             semester = student[0].semester
+            phone_no = student[0].phone_no
 
             subjects = [i.name for i in student[0].subject.all()]
             for subject in subjects:
@@ -147,6 +151,7 @@ def analytics(request):
                     'lname': lname,
                     'email': email,
                     'semester': semester,
+                    'phone_no': phone_no,
                     'feedback': avg_sub,
                     'subject': subject_list,
                     'numbers': [i for i in range(3, 9)],
@@ -218,8 +223,9 @@ def get_subject_on_semester(request, semester):
     subs = [i.name for i in Subject.objects.filter(semester=semester)]
     f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
     subjects_done_feedback = [i.subject.name for i in f]
+    print("Subjects done feedback: " + subjects_done_feedback)
     final = [i for i in subs if i not in subjects_done_feedback]
-    print(final)
+    print("Final: " + final)
 
     return HttpResponse(json.dumps({'subjects': final}), content_type="application/json")
 
@@ -364,37 +370,47 @@ def logOut(request):
 
 
 def teacherLogin(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        if user:
-            login(request, user)
-            if user.is_superuser:
-                return redirect('admin_analytics')
-            else:
-                return redirect('teacher_analytics')
-        else:
-            return render(request, 'appOne/teacher_login.html', {'i': 'Invalid Password/SAP ID'})
-    return render(request, 'appOne/teacher_login.html', {'i': ''})
+	# teacher = TeacherProfile.objects.filter(user=request.user)
+	if request.method == "POST":
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		user = authenticate(username=username, password=password)
+		if user:
+			teacher = TeacherProfile.objects.filter(user=user)
+			if teacher.count() != 0:
+				login(request, user)
+				if user.is_superuser:
+					return redirect('admin_analytics')
+				else:
+					return redirect('teacher_analytics')
+			else:
+				return render(request, 'appOne/teacher_login.html', {'i': 'Invalid Teacher SAP ID.'})
+		else:
+			return render(request, 'appOne/teacher_login.html', {'i': 'Invalid Password/SAP ID'})
+	return render(request, 'appOne/teacher_login.html', {'i': ''})
 
 
 def logIn(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = User.objects.filter(username=username)
-        try:
-            u = UserProfile.objects.all().filter(user=user)
-        except:
-            print("User does not exist!")
-        if(u.count() == 0):
-            return render(request, 'appOne/login.html', {'i': 'Invalid Password/SAP ID'})
-        user = authenticate(username=username, password=password)
+	if request.method == "POST":
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		user = User.objects.filter(username=username)
+		# try:
+		# 	u = UserProfile.objects.all().filter(user=user)
+		# except:
+		# 	print("User does not exist!")
+		# if(u.count() == 0):
+		# 	return render(request, 'appOne/login.html', {'i': 'Invalid Password/SAP ID'})
+		user = authenticate(username=username, password=password)
 
-        if user and (u.count() != 0):
-            login(request, user)
-            return redirect('index')
-        else:
-            return render(request, 'appOne/login.html', {'i': 'Invalid Password/SAP ID'})
-    return render(request, 'appOne/login.html', {'i': ''})
+		if user:
+			student = UserProfile.objects.filter(user=user)
+			if student.count() != 0:
+				login(request, user)
+				return redirect('index')
+			else:
+				return render(request, 'appOne/login.html', {'i': 'Invalid User SAP ID'})
+		else:
+			return render(request, 'appOne/login.html', {'i': 'Invalid Password/SAP ID'})
+			
+	return render(request, 'appOne/login.html', {'i': ''})
