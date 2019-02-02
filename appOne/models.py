@@ -7,6 +7,7 @@ from django.core.validators import RegexValidator
 class Subject(models.Model):
     name = models.CharField(max_length=250, blank=False)
     semester = models.IntegerField(default=5)
+    # batch = models.CharField()
 
     def __str__(self):
         return str(self.name) + " - Semester "  + str(self.semester)
