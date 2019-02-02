@@ -95,7 +95,6 @@
                 </li>
 								{% endif %}
             </ul>
-						<h6 style="margin-top: 80%; margin-left: 7%;">Developed by <br><a href="https://github.com/pujanm"> Pujan Mehta </a> and <a href="https://github.com/sahiljajodia01"> Sahil Jajodia </a></h6>
     	</div>
     </div>
 
@@ -177,11 +176,11 @@
 										<br>
 										<div class="col-md-12">
                         <div class="card">
-													<form method="post" style="padding: 5%;">
+													<form method="post" style="padding: 5%; margin: 0 auto; background: #f9f5f4;">
 														{% csrf_token %}
 														<div class="form-group">
 															<label for="text">Subject :</label>
-															<select class="form-control" name="subject" id="sub">
+															<select style="width: 50%" class="form-control" name="subject" id="sub">
 																<option>Select a Subject</option>
 																{% for sub in subject_list %}
 																	<option>{{ sub }}</option>
@@ -190,13 +189,13 @@
 														</div>
 														<div class="form-group">
 															<label for="text">Teacher :</label>
-			                        <select class="form-control" name="teacher" id="teacher">
+			                        <select style="width: 50%" class="form-control" name="teacher" id="teacher">
 
 			                        </select>
 														</div>
 														<div class="form-group">
 															<label for="text">Abilities to understand student's difficulties and willingness to help them :</label>
-															<select style="width: 20%" class="form-control" name="f1" id="f1">
+															<select style="width: 50%" class="form-control" name="f1" id="f1">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -206,7 +205,7 @@
 														</div>
 														<div class="form-group">
 															<label for="text">Commitment to academic work in the class :</label>
-															<select style="width: 20%" class="form-control" name="f2" id="f2">
+															<select style="width: 50%" class="form-control" name="f2" id="f2">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -216,7 +215,7 @@
 														</div>
 														<div class="form-group">
 															<label for="text">Regularity and Punctuality :</label>
-															<select style="width: 20%" class="form-control" name="f3" id="f3">
+															<select style="width: 50%" class="form-control" name="f3" id="f3">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -226,7 +225,7 @@
 														</div>
 														<div class="form-group">
 															<label for="text">Interaction in the class :</label>
-															<select style="width: 20%" class="form-control" name="f4" id="f4">
+															<select style="width: 50%" class="form-control" name="f4" id="f4">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -236,7 +235,7 @@
 														</div>
 														<div class="form-group">
 															<label for="f5">Coverage of syllabus :</label>
-															<select style="width: 20%" class="form-control" name="f5" id="f5">
+															<select style="width: 50%" class="form-control" name="f5" id="f5">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -246,7 +245,7 @@
 														</div>
 														<div class="form-group">
 															<label for="text">Planning of lessons throughout the Semester :</label>
-															<select style="width: 20%" class="form-control" name="f6" id="f6">
+															<select style="width: 50%" class="form-control" name="f6" id="f6">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -256,7 +255,7 @@
 														</div>
 														<div class="form-group">
 															<label for="text">Effective communication of subject matter :</label>
-															<select style="width: 20%" class="form-control" name="f7" id="f7">
+															<select style="width: 50%" class="form-control" name="f7" id="f7">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -266,7 +265,7 @@
 														</div>
 														<div class="form-group">
 															<label for="text">Management of lecture and class control :</label>
-															<select style="width: 20%" class="form-control" name="f8" id="f8">
+															<select style="width: 50%" class="form-control" name="f8" id="f8">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -276,7 +275,7 @@
 														</div>
 														<div class="form-group">
 															<label for="text">Overall ability to maintain sancity of Teaching - Learning process :</label>
-															<select style="width: 20%" class="form-control" name="f9" id="f9">
+															<select style="width: 50%" class="form-control" name="f9" id="f9">
 																<option>1</option>
 																<option>2</option>
 																<option>3</option>
@@ -299,13 +298,13 @@
             </div>
         </div>
     </div>
-		<!-- <footer class="navbar-fixed-bottom">
+		<footer class="navbar-fixed-bottom">
 						<div class="card" style="margin: 0; width: 100%;">
 								<div class="content">
 									<p style="margin: 0 auto; width: 40%;">Developed by <a href="https://github.com/pujanm"> Pujan Mehta </a> and <a href="https://github.com/sahiljajodia01"> Sahil Jajodia </a></p>
 								</div>
 						</div>
-		</footer> -->
+		</footer>
 </div>
 {% else %}
 	<p>SORRY</p>

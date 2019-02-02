@@ -5,21 +5,21 @@ from django.core.validators import RegexValidator
 
 
 class Subject(models.Model):
-    BATCHES = tuple([("ALL", "ALL")] + [('A'+str(i),'A'+str(i)) for i in range(1,5)]+[('B'+str(i),'B'+str(i)) for i in range(1,5)])
-
     name = models.CharField(max_length=250, blank=False)
     semester = models.IntegerField(default=5)
-    batch = models.CharField(max_length=50, choices=BATCHES, default="ALL")
 
     def __str__(self):
         return str(self.name) + " - Semester "  + str(self.semester)
 
 
 class TeacherProfile(models.Model):
+    BATCHES = tuple([("A", "A"), ("B", "B")] + [('A'+str(i),'A'+str(i)) for i in range(1,5)]+[('B'+str(i),'B'+str(i)) for i in range(1,5)])
+
     user = models.OneToOneField(User)
     fname = models.CharField(max_length=50, blank=False)
     lname = models.CharField(max_length=50, blank=False)
     subject = models.ManyToManyField(Subject, related_name="subject_teachers")
+    batch = models.CharField(max_length=50, choices=BATCHES, default="ALL")
 
     def __str__(self):
         return str(self.fname) + " " + str(self.lname)

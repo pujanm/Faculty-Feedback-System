@@ -24,8 +24,6 @@ def is_student(user):
         return False
 
 
-
-
 def index(request):
     if request.user.is_authenticated():
         if request.user.is_superuser:
@@ -36,7 +34,8 @@ def index(request):
         user = UserProfile.objects.filter(user=request.user)[0]
         user.subject = Subject.objects.filter(semester=user.semester)
         user.save()
-        
+        print(user.subject)
+        print(user.batch)
         f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
         subjects_done_feedback = [i.subject.name for i in f]
         print("Subject done feedback: " + str(subjects_done_feedback))
@@ -51,12 +50,7 @@ def index(request):
         teacher_list = TeacherProfile.objects.all()
 
         subject_list = [i for i in subject_list if i not in subjects_done_feedback]
-        # for i in subject_list:
-        #     if i in subjects_done_feedback:
-        #         try:
-        #             subject_list.remove(i)
-        #         except ValueError:
-        #             pass
+
         print("Subjects not feedback: " + str(subject_list))
         if request.POST:
             if request.POST.get('fname'):
@@ -258,9 +252,17 @@ def teacher_analytics(request):
 
 def get_teacher_name(request, subject):
     if request.user.is_authenticated():
+        user = UserProfile.objects.filter(user=request.user)[0]
+        user_division = user.batch[0]
+        user_batch = user.batch
         s = Subject.objects.filter(name=subject)
         if s.count() != 0:
-            t = TeacherProfile.objects.filter(subject=Subject.objects.filter(name=subject)[0])
+            teacher_of_batch = TeacherProfile.objects.filter(subject=s[0], batch=user_batch)
+            teacher_of_batch = [i for i in teacher_of_batch]
+            teacher_of_div = TeacherProfile.objects.filter(subject=s[0], batch=user_division)
+            teacher_of_div = [i for i in teacher_of_div]
+            t = teacher_of_div + teacher_of_batch
+            print(t)
             teacher_names = [i.fname + ' ' + i.lname for i in t]
         else:
             teacher_names = ['No Teacher Found']
@@ -268,17 +270,6 @@ def get_teacher_name(request, subject):
         return HttpResponse(json.dumps({'teacher_names': teacher_names}), content_type="application/json")
     else:
         return redirect('/')
-
-
-def get_subject_on_semester(request, semester):
-    subs = [i.name for i in Subject.objects.filter(semester=semester)]
-    f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
-    subjects_done_feedback = [i.subject.name for i in f]
-    print("Subjects done feedback: " + subjects_done_feedback)
-    final = [i for i in subs if i not in subjects_done_feedback]
-    print("Final: " + final)
-
-    return HttpResponse(json.dumps({'subjects': final}), content_type="application/json")
 
 
 def teacher_detailed_analytics(request, subject):
@@ -492,5 +483,5 @@ def logIn(request):
     			return render(request, 'appOne/login.html', {'i': 'Invalid User SAP ID'})
     	else:
     		return render(request, 'appOne/login.html', {'i': 'Invalid Password/SAP ID'})
-    		
+
     return render(request, 'appOne/login.html', {'i': ''})
