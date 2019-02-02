@@ -22,10 +22,9 @@ class UserProfileForm(forms.ModelForm):
     fname = forms.CharField(label='First Name')
     lname = forms.CharField(label='Last Name')
     semester = forms.IntegerField()
-
     class Meta():
         model = UserProfile
-        fields = ('fname', 'lname', 'semester', 'phone_no')
+        fields = ('fname', 'lname', 'semester', 'phone_no', 'batch')
 
 
 class TeacherProfileForm(forms.ModelForm):

@@ -37,6 +37,10 @@
 			#fname-error, #lname-error, #semester-error,  #email-error, #id_phone_no-error {
 				color: red;
 			}
+
+			.thing {
+				width: 20%;
+			}
 		</style>
 </head>
 <body>
@@ -91,6 +95,7 @@
                 </li>
 								{% endif %}
             </ul>
+						<h6 style="margin-top: 80%; margin-left: 7%;">Developed by <br><a href="https://github.com/pujanm"> Pujan Mehta </a> and <a href="https://github.com/sahiljajodia01"> Sahil Jajodia </a></h6>
     	</div>
     </div>
 
@@ -170,135 +175,141 @@
 										<h4>Hi {{ fname }} {{ lname }}!</h4>
 										<h3>SAP ID: {{ request.user }}</h3>
 										<br>
-										<form method="post">
-											{% csrf_token %}
-											<div class="form-group">
-												<label for="text">Subject :</label>
-												<select class="form-control" name="subject" id="sub">
-													<option>Select a Subject</option>
-													{% for sub in subject_list %}
-														<option>{{ sub }}</option>
-													{% endfor %}
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="text">Teacher :</label>
-                        <select class="form-control" name="teacher" id="teacher">
+										<div class="col-md-12">
+                        <div class="card">
+													<form method="post">
+														{% csrf_token %}
+														<div class="form-group">
+															<label for="text">Subject :</label>
+															<select class="form-control" name="subject" id="sub">
+																<option>Select a Subject</option>
+																{% for sub in subject_list %}
+																	<option>{{ sub }}</option>
+																{% endfor %}
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Teacher :</label>
+			                        <select class="form-control" name="teacher" id="teacher">
 
-                        </select>
-											</div>
-											<div class="form-group">
-												<label for="text">Abilities to understand student's difficulties and willingness to help them :</label>
-												<select class="form-control" name="f1" id="f1">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="text">Commitment to academic work in the class :</label>
-												<select class="form-control" name="f2" id="f2">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="text">Regularity and Punctuality :</label>
-												<select class="form-control" name="f3" id="f3">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="text">Interaction in the class :</label>
-												<select class="form-control" name="f4" id="f4">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="f5">Coverage of syllabus :</label>
-												<select class="form-control" name="f5" id="f5">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-												<!-- <input type="radio" value="1" name="f5"> 1
-												<input type="radio" value="2" name="f5"> 2
-												<input type="radio" value="3" name="f5"> 3
-												<input type="radio" value="4" name="f5"> 4
-												<input type="radio" value="5" name="f5"> 5 -->
-											</div>
-											<div class="form-group">
-												<label for="text">Planning of lessons throughout the Semester :</label>
-												<select class="form-control" name="f6" id="f6">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="text">Effective communication of subject matter :</label>
-												<select class="form-control" name="f7" id="f7">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="text">Management of lecture and class control :</label>
-												<select class="form-control" name="f8" id="f8">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="text">Overall ability to maintain sancity of Teaching - Learning process :</label>
-												<select class="form-control" name="f9" id="f9">
-													<option>1</option>
-													<option>2</option>
-													<option>3</option>
-													<option>4</option>
-													<option>5</option>
-												</select>
-											</div>
-											<div class="form-group">
-												<label for="text">Suggestion :</label>
-												<textarea type="text" class="form-control" id="sug" name="sug" placeholder="Write Your Suggestion"></textarea>
-											</div>
+			                        </select>
+														</div>
+														<div class="form-group">
+															<label for="text">Abilities to understand student's difficulties and willingness to help them :</label>
+															<select style="width: 20%" class="form-control" name="f1" id="f1">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Commitment to academic work in the class :</label>
+															<select style="width: 20%" class="form-control" name="f2" id="f2">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Regularity and Punctuality :</label>
+															<select style="width: 20%" class="form-control" name="f3" id="f3">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Interaction in the class :</label>
+															<select style="width: 20%" class="form-control" name="f4" id="f4">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="f5">Coverage of syllabus :</label>
+															<select style="width: 20%" class="form-control" name="f5" id="f5">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Planning of lessons throughout the Semester :</label>
+															<select style="width: 20%" class="form-control" name="f6" id="f6">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Effective communication of subject matter :</label>
+															<select style="width: 20%" class="form-control" name="f7" id="f7">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Management of lecture and class control :</label>
+															<select style="width: 20%" class="form-control" name="f8" id="f8">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Overall ability to maintain sancity of Teaching - Learning process :</label>
+															<select style="width: 20%" class="form-control" name="f9" id="f9">
+																<option>1</option>
+																<option>2</option>
+																<option>3</option>
+																<option>4</option>
+																<option>5</option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="text">Suggestion :</label>
+															<textarea type="text" class="form-control" id="sug" name="sug" placeholder="Write Your Suggestion"></textarea>
+														</div>
 
 
- 												<button type="submit" class="btn btn-default">Submit</button>
-										</form>
+			 												<button type="submit" class="btn btn-default">Submit</button>
+													</form>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+		<!-- <footer class="navbar-fixed-bottom">
+						<div class="card" style="margin: 0; width: 100%;">
+								<div class="content">
+									<p style="margin: 0 auto; width: 40%;">Developed by <a href="https://github.com/pujanm"> Pujan Mehta </a> and <a href="https://github.com/sahiljajodia01"> Sahil Jajodia </a></p>
+								</div>
+						</div>
+		</footer> -->
 </div>
 {% else %}
 	<p>SORRY</p>
 {% endif %}
-
 </body>
 
     <!--   Core JS Files   -->

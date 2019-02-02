@@ -104,8 +104,10 @@
                             <div class="content">
 														 <form method="post" class="form-group" id="signup">
 															 {% csrf_token %}
-															 {{ profile_form.as_p|linebreaks }}
-															 {{ user_form.as_p|linebreaks }}
+															  {{ profile_form.as_p|linebreaks }}
+															  {{ user_form.as_p|linebreaks }}
+
+
 															 <button type="submit" class="btn btn-default">Sign up</button>
 														 </form>
                             </div>
