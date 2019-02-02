@@ -41,7 +41,6 @@ def index(request):
             combined.append(b[i])
 
         user.subjects = combined
-
         user.save()
         print(user.subject)
         print(user.batch)
