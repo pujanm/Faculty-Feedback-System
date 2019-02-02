@@ -105,7 +105,9 @@ def index(request):
                     return redirect('/')
                 tea = TeacherProfile.objects.filter(fname=t.split(" ")[0])
                 print(tea)
-                sub = Subject.objects.filter(name=s)
+                sub = Subject.objects.filter(name=s, batch=u.batch)
+                if sub.count() == 0:
+                    sub = Subject.objects.filter(name=s, batch=u.batch[0])
                 print(sub)
                 f = Feedback.objects.create(
                     student=u,
@@ -159,13 +161,15 @@ def analytics(request):
                 batch = student[0].batch
                 subjects = [i.name for i in student[0].subject.all()]
                 for subject in subjects:
-                    sub_obj = Subject.objects.filter(name=subject)[0]
+                    sub_obj = Subject.objects.filter(name=subject, batch=batch)
+                    if sub_obj.count() == 0:
+                        sub_obj = Subject.objects.filter(name=subject, batch=batch[0])
                     sub = Feedback.objects.filter(subject=sub_obj, student=student[0])
                     if sub.count() != 0:
                         print(sub)
-                        sum = 0
-                        sum = sub[0].res1 / 5 + sub[0].res2 / 5  + sub[0].res3 / 5 + sub[0].res4 / 5 + sub[0].res5 / 5 + sub[0].res6 / 5 + sub[0].res7 / 5 + sub[0].res8 / 5 + sub[0].res9 / 5
-                        avg = sum / 9
+                        sums = 0
+                        sums = sub[0].res1 / 5 + sub[0].res2 / 5  + sub[0].res3 / 5 + sub[0].res4 / 5 + sub[0].res5 / 5 + sub[0].res6 / 5 + sub[0].res7 / 5 + sub[0].res8 / 5 + sub[0].res9 / 5
+                        avg = sums / 9
                         avg_sub.append(round(avg * 100))
                         subject_list.append(subject)
                         print(avg_sub)
@@ -213,24 +217,41 @@ def teacher_analytics(request):
         subject_list = []
         if request.user.is_authenticated():
             if is_teacher(request.user):
-                user = request.user;
+                user = request.user
                 teacher = TeacherProfile.objects.filter(user=user)
                 subjects = [i.name for i in teacher[0].subject.all()]
                 print(teacher[0].fname + " " + teacher[0].lname)
                 fname = teacher[0].fname
                 lname = teacher[0].lname
-                print(subjects)
-                for subject in subjects:
-                    sub_obj = Subject.objects.filter(name=subject)[0]
-                    sub = Feedback.objects.filter(subject=sub_obj, teacher=teacher[0])
-                    if sub.count() != 0:
-                        print("Subs: ", sub)
-                        sum = 0
-                        sum = sub[0].res1 / 5 + sub[0].res2 / 5  + sub[0].res3 / 5 + sub[0].res4 / 5 + sub[0].res5 / 5 + sub[0].res6 / 5 + sub[0].res7 / 5 + sub[0].res8 / 5 + sub[0].res9 / 5
-                        avg = sum / 9
-                        avg_sub.append(round(avg * 100))
-                        subject_list.append(subject)
-                        print(avg_sub)
+                print("Teacher subjects: ", subjects)
+
+                unique_sub_list = []
+                for x in subjects:
+                    if x not in unique_sub_list:
+                        unique_sub_list.append(x)
+
+
+                for subject in unique_sub_list:
+                    sub_obj = Subject.objects.filter(name=subject)
+                    print("Subject objects ", sub_obj)
+                    if sub_obj.count() != 0:
+                        demo_avg_list = []
+                        for k in sub_obj:
+                            subs = Feedback.objects.filter(subject=k, teacher=teacher[0])
+                            print("Feedback with subjects ", subs)
+                            if subs.count() != 0:
+                                for sub in subs:
+                                    print("Subs: ", sub)
+                                    sums = sub.res1 / 5 + sub.res2 / 5  + sub.res3 / 5 + sub.res4 / 5 + sub.res5 / 5 + sub.res6 / 5 + sub.res7 / 5 + sub.res8 / 5 + sub.res9 / 5
+                                    avg = sums / 9
+                                    print("Avg ", avg)
+                                    demo_avg_list.append(avg)
+                        if len(demo_avg_list) > 0:
+                            avg = sum(demo_avg_list)/len(demo_avg_list)
+                            avg_sub.append(round(avg * 100))
+                            subject_list.append(subject)
+                print("Subs List: ", subject_list)
+                print("Avg List ", avg_sub)
                 context = {
                         'feedback': avg_sub,
                         'subject': subject_list,
@@ -286,30 +307,44 @@ def teacher_detailed_analytics(request, subject):
             subject = Subject.objects.filter(name=subject)
             user = request.user
             teacher = TeacherProfile.objects.filter(user=user)
-
-            feedback = Feedback.objects.filter(teacher=teacher, subject=subject)
+            print("Subject: ", subject)
+            
             arr = [0, 0, 0, 0, 0]
             count_arr = ["One", "Two", "Three", "Four", "Five"]
-            for i in feedback:
-                sum = 0
-                sum = i.res1 + i.res2 + i.res3 + i.res4 + i.res5 + i.res6 + i.res7 + i.res8 + i.res9
-                avg = round(sum/9.0)
-                arr[avg - 1] += 1
+            demo_avg_list = []
+            for k in subject:
+                print("Subject: ", k)
+                feedback = Feedback.objects.filter(teacher=teacher, subject=k)
+                print("Feedbacks: ", feedback)
+                if feedback.count() != 0:
+                    for i in feedback:
+                        sums = 0
+                        sums = i.res1 + i.res2 + i.res3 + i.res4 + i.res5 + i.res6 + i.res7 + i.res8 + i.res9
+                        avg = round(sums/9.0)
+                        arr[avg - 1] += 1
 
-            sum = [0 for i in range(9)]
-            for i in feedback:
-                sum[0] += i.res1
-                sum[1] += i.res2
-                sum[2] += i.res3
-                sum[3] += i.res4
-                sum[4] += i.res5
-                sum[5] += i.res6
-                sum[6] += i.res7
-                sum[7] += i.res8
-                sum[8] += i.res9
-            avg = [math.ceil(i / len(feedback)) for i in sum]
-            print(avg)
+                    sums = [0 for i in range(9)]
+                    for i in feedback:
+                        sums[0] += i.res1
+                        sums[1] += i.res2
+                        sums[2] += i.res3
+                        sums[3] += i.res4
+                        sums[4] += i.res5
+                        sums[5] += i.res6
+                        sums[6] += i.res7
+                        sums[7] += i.res8
+                        sums[8] += i.res9
+                    avg = [math.ceil(i / len(feedback)) for i in sums]
+                    demo_avg_list.append(avg)
+                    print("Avg: ", avg)
+            avg = []
+            for y in range(9):
+                avg.append(0)  
+                for z in range(len(demo_avg_list)):
+                    avg[y] += demo_avg_list[z][y]
 
+                avg[y] = avg[y]/len(demo_avg_list)
+            print("Final: ", avg)
             context = {
                 'subject_name': subject[0].name,
                 'fname': teacher[0].fname,
@@ -336,7 +371,12 @@ def admin_analytics(request):
             subject = Subject.objects.all()
             subject_dict = {}
             for i in range(3, 9):
-                subject_dict[i] = Subject.objects.filter(semester=i)
+                subject = Subject.objects.filter(semester=i)
+                unique_sub_list = []
+                for x in subject:
+                    if x.name not in unique_sub_list:
+                        unique_sub_list.append(x.name)
+                subject_dict[i] = unique_sub_list
             print(subject_dict)
             context = {
                 "subject": subject,
@@ -356,22 +396,23 @@ def admin_analytics_detailed(request, subject):
     if request.user.is_authenticated():
         if request.user.is_superuser:
             subject = Subject.objects.filter(name=subject)
-            subject_students = subject[0].subject_students.all()
-            subject_students_users = [i.user.username for i in subject_students]
-            print(subject_students_users)
-
-            subject_feedback = Feedback.objects.filter(subject=subject)
-            subject_feedback_users = [i.student.user.username for i in subject_feedback]
-            print(subject_feedback_users)
-
-            # subject_feedback_users_notfilled_name = []
             subject_feedback_users_notfilled = []
-            for i in subject_students_users:
-                if i not in subject_feedback_users:
-                    user = User.objects.filter(username=i)
-                    studentPro = UserProfile.objects.filter(user=user)[0]
-                    # subject_feedback_users_notfilled_name.append(studentPro.fname + " " + studentPro.lname)
-                    subject_feedback_users_notfilled.append([i, (studentPro.fname + " " + studentPro.lname), studentPro.phone_no, user[0].email])
+            for sub in subject:
+                subject_students = sub.subject_students.all()
+                subject_students_users = [i.user.username for i in subject_students]
+                print("subject_students_users: ", subject_students_users)
+
+                subject_feedback = Feedback.objects.filter(subject=sub)
+                subject_feedback_users = [i.student.user.username for i in subject_feedback]
+                print("subject_feedback_users: ", subject_feedback_users)
+
+                # subject_feedback_users_notfilled_name = []
+                for i in subject_students_users:
+                    if i not in subject_feedback_users:
+                        user = User.objects.filter(username=i)
+                        studentPro = UserProfile.objects.filter(user=user)[0]
+                        # subject_feedback_users_notfilled_name.append(studentPro.fname + " " + studentPro.lname)
+                        subject_feedback_users_notfilled.append([i, (studentPro.fname + " " + studentPro.lname), studentPro.phone_no, user[0].email])
 
             context = {
                 "sapid": subject_feedback_users_notfilled,
