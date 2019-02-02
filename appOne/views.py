@@ -32,7 +32,16 @@ def index(request):
             return redirect('teacher_analytics')
 
         user = UserProfile.objects.filter(user=request.user)[0]
-        user.subject = Subject.objects.filter(semester=user.semester)
+        a = Subject.objects.filter(semester=user.semester, batch=user.batch[0])
+        b = Subject.objects.filter(semester=user.semester, batch=user.batch)
+        combined = []
+        for i in range(len(a)):
+            combined.append(a[i])
+        for i in range(len(b)):
+            combined.append(b[i])
+
+        user.subjects = combined
+
         user.save()
         print(user.subject)
         print(user.batch)
@@ -46,7 +55,10 @@ def index(request):
         email = request.user.email
         semester = u[0].semester
         phone_no = u[0].phone_no
-        subject_list = [i.name for i in u[0].subject.all()]
+        div = u[0].batch[0]
+        batch = u[0].batch
+        subject_list = [i.name for i in u[0].subject.all() if i.batch == div or i.batch == batch]
+        print("Subject List: ", subject_list)
         teacher_list = TeacherProfile.objects.all()
 
         subject_list = [i for i in subject_list if i not in subjects_done_feedback]
@@ -257,11 +269,7 @@ def get_teacher_name(request, subject):
         user_batch = user.batch
         s = Subject.objects.filter(name=subject)
         if s.count() != 0:
-            teacher_of_batch = TeacherProfile.objects.filter(subject=s[0], batch=user_batch)
-            teacher_of_batch = [i for i in teacher_of_batch]
-            teacher_of_div = TeacherProfile.objects.filter(subject=s[0], batch=user_division)
-            teacher_of_div = [i for i in teacher_of_div]
-            t = teacher_of_div + teacher_of_batch
+            t = TeacherProfile.objects.filter(subject=s[0])
             print(t)
             teacher_names = [i.fname + ' ' + i.lname for i in t]
         else:
