@@ -125,6 +125,18 @@
                                         <label for="text">Phone No. :</label>
                                         <input type="text" class="form-control" id="phone_no" name="phone_no" placeholder="{{ phone_no }}" value="{{ phone_no }}">
                                     </div>
+																		<div class="form-group">
+																			<label for="text">Batch :</label>
+																			<select class="form-control" name="batch" id="batch">
+																					{% for i in batches %}
+																						{% if i == batch %}
+																							<option selected="selected">{{ batch }}</option>
+																						{% else %}
+																						 <option>{{ i }}</option>
+																						{% endif %}
+																					{% endfor %}
+																			</select>
+																		</div>
                                     <div class="form-group">
                                         <label for="text">Semester :</label>
                                         <select class="form-control" name="semester" id="sem">

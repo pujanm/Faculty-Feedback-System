@@ -31,32 +31,29 @@ def index(request):
         elif is_teacher(request.user):
             return redirect('teacher_analytics')
 
-        user = UserProfile.objects.filter(user=request.user)[0]
-        a = Subject.objects.filter(semester=user.semester, batch=user.batch[0])
-        b = Subject.objects.filter(semester=user.semester, batch=user.batch)
-        combined = []
-        for i in range(len(a)):
-            combined.append(a[i])
-        for i in range(len(b)):
-            combined.append(b[i])
+        username = request.user
+        user = UserProfile.objects.filter(user=username)[0]
 
-        user.subjects = combined
+        s1 = Subject.objects.filter(semester=user.semester, batch=user.batch[0])
+        s2 = Subject.objects.filter(semester=user.semester, batch=user.batch)
+        final = s1.union(s2)
+
+        user.subject = final
         user.save()
+
+        fname = user.fname
+        lname = user.lname
+        email = request.user.email
+        semester = user.semester
+        phone_no = user.phone_no
+        batch = user.batch
+        subject_list = [i.name for i in user.subject.all()]
         print(user.subject)
         print(user.batch)
-        f = Feedback.objects.filter(student=UserProfile.objects.filter(user=request.user))
+        f = Feedback.objects.filter(student=user)
         subjects_done_feedback = [i.subject.name for i in f]
-        print("Subject done feedback: " + str(subjects_done_feedback))
-        username = request.user
-        u = UserProfile.objects.filter(user=username)
-        fname = u[0].fname
-        lname = u[0].lname
-        email = request.user.email
-        semester = u[0].semester
-        phone_no = u[0].phone_no
-        div = u[0].batch[0]
-        batch = u[0].batch
-        subject_list = [i.name for i in u[0].subject.all() if i.batch == div or i.batch == batch]
+        print("Subject done feedback: ", (subjects_done_feedback))
+
         print("Subject List: ", subject_list)
         teacher_list = TeacherProfile.objects.all()
 
@@ -70,29 +67,27 @@ def index(request):
                 email = request.POST.get('email')
                 semester = request.POST.get('semester')
                 phone_no = request.POST.get('phone_no')
+                batch = request.POST.get('batch')
                 user = UserProfile.objects.filter(user=request.user)[0]
                 user.fname = fname
                 user.lname = lname
                 user.semester = semester
                 user.phone_no = phone_no
+                user.batch = batch
+                s1 = Subject.objects.filter(semester=user.semester, batch=user.batch[0])
+                s2 = Subject.objects.filter(semester=user.semester, batch=user.batch)
+                final = s1.union(s2)
+
+                user.subject = final
                 user.subject = Subject.objects.filter(semester=semester)
                 request.user.email = email
+
                 request.user.save()
                 user.save()
-                subject_list = [i.name for i in user.subject.all() if i.name not in subjects_done_feedback]
-                context = {
-                    'fname': fname,
-                    'lname': lname,
-                    'email': email,
-                    'semester': semester,
-                    'phone_no': phone_no,
-                    'teacher_list': teacher_list,
-                    'subject_list': subject_list,
-                    'numbers': [i for i in range(3, 9)]
-                }
-                return render(request, 'appOne/dashboard.html', context)
+
+                return redirect('/')
             else:
-                u = u[0]
+                u = user
                 s = request.POST.get('subject')
                 t = request.POST.get('teacher')
                 f1 = request.POST.get('f1')
@@ -135,6 +130,8 @@ def index(request):
             'email': email,
             'semester': semester,
             'phone_no': phone_no,
+            'batch': batch,
+            'batches': ['A' + str(i) for i in range(1, 5)] + ['B' + str(i) for i in range(1, 5)],
             'numbers': [i for i in range(3, 9)],
             'teacher_list': teacher_list,
             'subject_list': subject_list
@@ -159,11 +156,11 @@ def analytics(request):
                 email = request.user.email
                 semester = student[0].semester
                 phone_no = student[0].phone_no
-
+                batch = student[0].batch
                 subjects = [i.name for i in student[0].subject.all()]
                 for subject in subjects:
-                    sub_obj = Subject.objects.filter(name=subject)
-                    sub = Feedback.objects.filter(subject=sub_obj, student=student)
+                    sub_obj = Subject.objects.filter(name=subject)[0]
+                    sub = Feedback.objects.filter(subject=sub_obj, student=student[0])
                     if sub.count() != 0:
                         print(sub)
                         sum = 0
@@ -180,6 +177,8 @@ def analytics(request):
                         'phone_no': phone_no,
                         'feedback': avg_sub,
                         'subject': subject_list,
+                        'batch': batch,
+                        'batches': ['A' + str(i) for i in range(1, 5)] + ['B' + str(i) for i in range(1, 5)],
                         'numbers': [i for i in range(3, 9)],
                         'f': ''
                     }
@@ -220,11 +219,12 @@ def teacher_analytics(request):
                 print(teacher[0].fname + " " + teacher[0].lname)
                 fname = teacher[0].fname
                 lname = teacher[0].lname
+                print(subjects)
                 for subject in subjects:
-                    sub_obj = Subject.objects.filter(name=subject)
-                    sub = Feedback.objects.filter(subject=sub_obj, teacher=teacher)
+                    sub_obj = Subject.objects.filter(name=subject)[0]
+                    sub = Feedback.objects.filter(subject=sub_obj, teacher=teacher[0])
                     if sub.count() != 0:
-                        print(sub)
+                        print("Subs: ", sub)
                         sum = 0
                         sum = sub[0].res1 / 5 + sub[0].res2 / 5  + sub[0].res3 / 5 + sub[0].res4 / 5 + sub[0].res5 / 5 + sub[0].res6 / 5 + sub[0].res7 / 5 + sub[0].res8 / 5 + sub[0].res9 / 5
                         avg = sum / 9
@@ -264,11 +264,12 @@ def teacher_analytics(request):
 def get_teacher_name(request, subject):
     if request.user.is_authenticated():
         user = UserProfile.objects.filter(user=request.user)[0]
-        user_division = user.batch[0]
-        user_batch = user.batch
-        s = Subject.objects.filter(name=subject)
-        if s.count() != 0:
-            t = TeacherProfile.objects.filter(subject=s[0])
+        s1 = Subject.objects.filter(name=subject, batch=user.batch[0])
+        s2 = Subject.objects.filter(name=subject, batch=user.batch)
+        final = s1.union(s2)
+
+        if final.count() != 0:
+            t = TeacherProfile.objects.filter(subject=final[0])
             print(t)
             teacher_names = [i.fname + ' ' + i.lname for i in t]
         else:
