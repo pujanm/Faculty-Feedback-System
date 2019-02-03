@@ -83,6 +83,8 @@ def index(request):
                 phone_no = request.POST.get('phone_no')
                 batch = request.POST.get('batch')
                 user = UserProfile.objects.filter(user=request.user)[0]
+                if user.batch != batch:
+                    Feedback.objects.filter(student=user).delete()
                 user.fname = fname
                 user.lname = lname
                 user.semester = semester
