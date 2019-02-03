@@ -48,16 +48,30 @@ def index(request):
         phone_no = user.phone_no
         batch = user.batch
         subject_list = [i.name for i in user.subject.all()]
-        print(user.subject)
-        print(user.batch)
+
         f = Feedback.objects.filter(student=user)
-        subjects_done_feedback = [i.subject.name for i in f]
+        subjects_done_feedback = [i.subject.name + '-' + i.teacher.fname + ' ' + i.teacher.lname for i in f]
+
         print("Subject done feedback: ", (subjects_done_feedback))
 
         print("Subject List: ", subject_list)
         teacher_list = TeacherProfile.objects.all()
 
-        subject_list = [i for i in subject_list if i not in subjects_done_feedback]
+        subject_teacher_list = []
+        for i in teacher_list:
+            for j in i.subject.all():
+                subject_teacher_list.append(j.name + '-' + i.fname + ' ' + i.lname)
+
+        # print("subject_teacher_list ", subject_teacher_list)
+        # print("subjects_done_feedback ", subjects_done_feedback)
+
+        subject_list = [i.split('-')[0] for i in subject_teacher_list if i not in subjects_done_feedback]
+
+        unique_sub_list = []
+        for x in subject_list:
+            if x not in unique_sub_list:
+                unique_sub_list.append(x)
+        subject_list = unique_sub_list
 
         print("Subjects not feedback: " + str(subject_list))
         if request.POST:
@@ -283,16 +297,19 @@ def teacher_analytics(request):
 
 
 def get_teacher_name(request, subject):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated() and not request.user.is_superuser:
         user = UserProfile.objects.filter(user=request.user)[0]
         s1 = Subject.objects.filter(name=subject, batch=user.batch[0])
         s2 = Subject.objects.filter(name=subject, batch=user.batch)
         final = s1.union(s2)
 
         if final.count() != 0:
+            f = Feedback.objects.filter(subject=Subject.objects.filter(name=subject)[0], student=user)
+            teacher_given_feedback = [i.teacher for i in f]
             t = TeacherProfile.objects.filter(subject=final[0])
-            print(t)
-            teacher_names = [i.fname + ' ' + i.lname for i in t]
+            print("Teacher ", t)
+            print("Feedback ", teacher_given_feedback)
+            teacher_names = [i.fname + ' ' + i.lname for i in t if i not in teacher_given_feedback]
         else:
             teacher_names = ['No Teacher Found']
         print(teacher_names)
