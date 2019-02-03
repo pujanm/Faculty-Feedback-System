@@ -308,7 +308,7 @@ def teacher_detailed_analytics(request, subject):
             user = request.user
             teacher = TeacherProfile.objects.filter(user=user)
             print("Subject: ", subject)
-            
+
             arr = [0, 0, 0, 0, 0]
             count_arr = ["One", "Two", "Three", "Four", "Five"]
             demo_avg_list = []
@@ -339,7 +339,7 @@ def teacher_detailed_analytics(request, subject):
                     print("Avg: ", avg)
             avg = []
             for y in range(9):
-                avg.append(0)  
+                avg.append(0)
                 for z in range(len(demo_avg_list)):
                     avg[y] += demo_avg_list[z][y]
 
@@ -406,12 +406,11 @@ def admin_analytics_detailed(request, subject):
                 subject_feedback_users = [i.student.user.username for i in subject_feedback]
                 print("subject_feedback_users: ", subject_feedback_users)
 
-                # subject_feedback_users_notfilled_name = []
+
                 for i in subject_students_users:
                     if i not in subject_feedback_users:
                         user = User.objects.filter(username=i)
                         studentPro = UserProfile.objects.filter(user=user)[0]
-                        # subject_feedback_users_notfilled_name.append(studentPro.fname + " " + studentPro.lname)
                         subject_feedback_users_notfilled.append([i, (studentPro.fname + " " + studentPro.lname), studentPro.phone_no, user[0].email])
 
             context = {
@@ -515,12 +514,6 @@ def logIn(request):
     	username = request.POST.get('username')
     	password = request.POST.get('password')
     	user = User.objects.filter(username=username)
-    	# try:
-    	# 	u = UserProfile.objects.all().filter(user=user)
-    	# except:
-    	# 	print("User does not exist!")
-    	# if(u.count() == 0):
-    	# 	return render(request, 'appOne/login.html', {'i': 'Invalid Password/SAP ID'})
     	user = authenticate(username=username, password=password)
 
     	if user:
