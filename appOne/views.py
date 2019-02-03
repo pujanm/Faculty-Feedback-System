@@ -178,15 +178,21 @@ def analytics(request):
                     sub_obj = Subject.objects.filter(name=subject, batch=batch)
                     if sub_obj.count() == 0:
                         sub_obj = Subject.objects.filter(name=subject, batch=batch[0])
-                    sub = Feedback.objects.filter(subject=sub_obj, student=student[0])
-                    if sub.count() != 0:
-                        print(sub)
-                        sums = 0
-                        sums = sub[0].res1 / 5 + sub[0].res2 / 5  + sub[0].res3 / 5 + sub[0].res4 / 5 + sub[0].res5 / 5 + sub[0].res6 / 5 + sub[0].res7 / 5 + sub[0].res8 / 5 + sub[0].res9 / 5
-                        avg = sums / 9
-                        avg_sub.append(round(avg * 100))
-                        subject_list.append(subject)
-                        print(avg_sub)
+                    teachers_for_subject = [i for i in sub_obj[0].subject_teachers.all()]
+                    demo_avg_list = []
+                    for teacher in teachers_for_subject:
+                        sub = Feedback.objects.filter(subject=sub_obj[0], student=student[0], teacher=teacher)
+                        if sub.count() != 0:
+                            print(sub)
+                            sums = 0
+                            sums = sub[0].res1 / 5 + sub[0].res2 / 5  + sub[0].res3 / 5 + sub[0].res4 / 5 + sub[0].res5 / 5 + sub[0].res6 / 5 + sub[0].res7 / 5 + sub[0].res8 / 5 + sub[0].res9 / 5
+                            avg = sums / 9
+                            if subject not in subject_list:
+                                subject_list.append(subject)
+                            demo_avg_list.append(round(avg * 100))
+                    if len(demo_avg_list) > 0:
+                        avg_sub.append(sum(demo_avg_list)/len(demo_avg_list))
+                    # subject_list.append(subject)
                 context = {
                         'fname': fname,
                         'lname': lname,
