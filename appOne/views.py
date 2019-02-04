@@ -37,6 +37,7 @@ def index(request):
         s1 = Subject.objects.filter(semester=user.semester, batch=user.batch[0])
         s2 = Subject.objects.filter(semester=user.semester, batch=user.batch)
         final = s1.union(s2)
+        print(final)
 
         user.subject = final
         user.save()
@@ -47,7 +48,8 @@ def index(request):
         semester = user.semester
         phone_no = user.phone_no
         batch = user.batch
-        subject_list = [i.name for i in user.subject.all()]
+        # subject_list = [i.name for i in user.subject.all()]
+        subject_list = final
 
         f = Feedback.objects.filter(student=user)
         subjects_done_feedback = [i.subject.name + '-' + i.teacher.fname + ' ' + i.teacher.lname for i in f]
@@ -59,19 +61,22 @@ def index(request):
 
         subject_teacher_list = []
         for i in teacher_list:
-            for j in i.subject.all():
+            for j in i.subject.filter(semester=user.semester):
                 subject_teacher_list.append(j.name + '-' + i.fname + ' ' + i.lname)
 
         # print("subject_teacher_list ", subject_teacher_list)
         # print("subjects_done_feedback ", subjects_done_feedback)
 
         subject_list = [i.split('-')[0] for i in subject_teacher_list if i not in subjects_done_feedback]
-
+        final_names = [i.name for i in final]
         unique_sub_list = []
         for x in subject_list:
             if x not in unique_sub_list:
                 unique_sub_list.append(x)
         subject_list = unique_sub_list
+
+        
+
 
         print("Subjects not feedback: " + str(subject_list))
         if request.POST:
@@ -195,6 +200,7 @@ def analytics(request):
                     if len(demo_avg_list) > 0:
                         avg_sub.append(sum(demo_avg_list)/len(demo_avg_list))
                     # subject_list.append(subject)
+                print("Avg sub: ", avg_sub)
                 context = {
                         'fname': fname,
                         'lname': lname,
