@@ -1,7 +1,5 @@
 # Faculty - Feedback System
-It is a feedback system where students give their review on their respective faculties over a semester.These reviews are retrieved and certain calcultions are performed and a pie-chart is plotted.This pie-chart helps the higher authorities to analyze the faculty performance which will in turn helps them to smoothen the teaching learning process.
-Here student can only review analytics of the feedbacks that he has given.
-And the teacher/faculty can review his/her performance.
+It is a feedback system where students give their review on their respective faculties over a semester. These reviews are retrieved, and specific calculations are performed, and a pie-chart is plotted. This pie-chart helps the higher authorities to analyze the faculty performance, which will, in turn, helps them to smoothen the teaching-learning process. Here student can only review the analytics of the feedbacks that he has given. And the teacher/faculty can review his/her performance.
 ## Student Sign Up Page
 ![fac1](https://user-images.githubusercontent.com/26873907/38173035-efa586b8-35d4-11e8-9db7-09b4368e2913.png)
 ## Teacher Sign Up Page
